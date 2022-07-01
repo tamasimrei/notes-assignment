@@ -1,9 +1,18 @@
 version: "3.9"
 services:
   web:
-    build: .
-    image: notes:latest
+    build: "."
+    image: "notes:latest"
     ports:
       - "80:8080"
     volumes:
-      - ./:/var/www/html
+      - "./:/var/www/html"
+    command: sh -c "composer install && supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+
+  db:
+    image: "mariadb"
+    restart: "always"
+    environment:
+      MARIADB_ROOT_PASSWORD: "Pas#W0rd"
+    ports:
+      - "3306:3306"

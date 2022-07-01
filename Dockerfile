@@ -7,6 +7,3 @@ RUN apk add bash sudo php81-iconv php81-simplexml php81-posix php81-pdo php81-to
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
 USER nobody
-
-# Run composer install to install the dependencies
-RUN composer install --optimize-autoloader --no-interaction --no-progress
