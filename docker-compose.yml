@@ -13,6 +13,8 @@ services:
     image: "mariadb"
     restart: "always"
     environment:
-      MARIADB_ROOT_PASSWORD: "Pas#W0rd"
+      MARIADB_ROOT_PASSWORD: "Pas_W0rd"
     ports:
       - "3306:3306"
+    volumes:
+      - ./var/lib/mysql:/var/lib/mysql
