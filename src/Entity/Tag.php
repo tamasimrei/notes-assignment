@@ -2,11 +2,12 @@
 
 namespace App\Entity;
 use Doctrine\ORM\Mapping as ORM;
-use Symfony\Bridge\Doctrine\Validator\Constraints;
+use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineConstraints;
+use Symfony\Component\Validator\Constraints;
 
 /**
  * @ORM\Entity
- * @Constraints\UniqueEntity(fields="name", message="Tag already exists.")
+ * @DoctrineConstraints\UniqueEntity(fields="name", message="Tag already exists.")
  */
 class Tag
 {
@@ -22,6 +23,7 @@ class Tag
     /**
      * @var string
      * @ORM\Column(type="text")
+     * @Constraints\NotBlank
      */
     private $name;
 

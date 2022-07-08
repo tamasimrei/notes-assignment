@@ -12,6 +12,7 @@
         "ext-posix": "*",
         "ext-simplexml": "*",
         "ext-tokenizer": "*",
+        "doctrine/annotations": "^1.13",
         "doctrine/doctrine-bundle": "^2.7",
         "doctrine/doctrine-migrations-bundle": "^3.2",
         "doctrine/orm": "^2.12",
