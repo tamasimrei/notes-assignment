@@ -4,11 +4,9 @@ namespace App\Service;
 
 use App\Entity\Tag;
 use App\Repository\TagRepository;
-use Doctrine\Common\Collections\Collection;
-use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
-class TagService
+class TagService extends AbstractEntityService
 {
 
     /**
@@ -17,45 +15,30 @@ class TagService
     private $tagRepository;
 
     /**
-     * @var ValidatorInterface
-     */
-    private ValidatorInterface $validator;
-
-    /**
      * @param TagRepository $tagRepository
+     * @param ValidatorInterface $validator
      */
     public function __construct(
         TagRepository $tagRepository,
         ValidatorInterface $validator
     ) {
         $this->tagRepository = $tagRepository;
-        $this->validator = $validator;
+        parent::__construct($validator);
     }
 
     /**
-     * @param Tag $tag
-     * @return array
+     * @param int $tagId
+     * @return Tag|null
      */
-    public function validateTag(Tag $tag): array
+    public function findById(int $tagId): ?Tag
     {
-        $validationErrors = [];
-        $constraintViolations = $this->validator->validate($tag);
-
-        foreach ($constraintViolations as $violation) {
-            /** @var ConstraintViolation $violation */
-            $validationErrors[] = [
-                'field' => $violation->getPropertyPath(),
-                'message' => $violation->getMessage(),
-            ];
-        }
-
-        return $validationErrors;
+        return $this->tagRepository->find($tagId);
     }
 
     /**
      * @return Tag[]
      */
-    public function findAll()
+    public function findAll(): array
     {
         return $this->tagRepository->findBy(
             [],
@@ -64,12 +47,12 @@ class TagService
     }
 
     /**
-     * @param int $tagId
-     * @return Tag|null
+     * @param Tag $tag
+     * @return Tag
      */
-    public function findById(int $tagId)
+    public function saveTag(Tag $tag): Tag
     {
-        return $this->tagRepository->find($tagId);
+        return $this->tagRepository->persist($tag);
     }
 
     /**
@@ -79,7 +62,7 @@ class TagService
     public function deleteById(int $tagId): bool
     {
         $tag = $this->findById($tagId);
-        if (! $tag) {
+        if (empty($tag)) {
             return false;
         }
 

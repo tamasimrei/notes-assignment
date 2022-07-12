@@ -42,6 +42,20 @@ class JsonApiProblemNormalizer implements NormalizerInterface
      */
     public function supportsNormalization($data, $format = null): bool
     {
+
+
+
+
+
+        // FIXME
+        // service disabled
+        return false;
+
+
+
+
+
+
         return $data instanceof FlattenException;
     }
 }

@@ -10,6 +10,7 @@ use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Annotation\Route;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
 
@@ -22,8 +23,8 @@ class TagController extends AbstractApiController
     private TagService $tagService;
 
     /**
-     * @param TagService $tagService
      * @param SerializerInterface $serializer
+     * @param TagService $tagService
      */
     public function __construct(
         SerializerInterface $serializer,
@@ -65,11 +66,23 @@ class TagController extends AbstractApiController
     public function createTagAction(Request $request): JsonResponse
     {
         $tag = $this->getValidTagFromRequest($request);
-
-        //dd($tag);
-        // TODO create via repo method
-
+        $tag = $this->tagService->saveTag($tag);
         return $this->json($tag);
+    }
+
+    /**
+     * @Route("/api/tag/{tagId}", name="delete_tag", methods={"DELETE"}, format="json")
+     * @param int $tagId
+     * @return Response
+     */
+    public function deleteOneTagAction(int $tagId): Response
+    {
+        $removed = $this->tagService->deleteById($tagId);
+        if (!$removed) {
+            throw $this->createJsonNotFoundException('Tag Not Found');
+        }
+
+        return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT);
     }
 
     /**
@@ -94,7 +107,7 @@ class TagController extends AbstractApiController
             $tag = $this->serializer->deserialize(
                 (string)$request->getContent(),
                 Tag::class,
-                'json'
+                JsonEncoder::FORMAT
             );
         } catch (NotEncodableValueException $e) {
             throw $this->createJsonBadRequestHttpException('Cannot Decode Request');
@@ -108,7 +121,7 @@ class TagController extends AbstractApiController
      */
     private function validateTag(Tag $tag): void
     {
-        $validationErrors = $this->tagService->validateTag($tag);
+        $validationErrors = $this->tagService->validate($tag);
         if (empty($validationErrors)) {
             return;
         }
@@ -120,23 +133,8 @@ class TagController extends AbstractApiController
                     'message' => 'Tag Validation Failed',
                     'errors' => $validationErrors,
                 ],
-                'json'
+                JsonEncoder::FORMAT
             )
         );
-    }
-
-    /**
-     * @Route("/api/tag/{tagId}", name="delete_tag", methods={"DELETE"}, format="json")
-     * @param int $tagId
-     * @return Response
-     */
-    public function deleteOneTagAction(int $tagId): Response
-    {
-        $removed = $this->tagService->deleteById($tagId);
-        if (!$removed) {
-            throw $this->createJsonNotFoundException('Tag Not Found');
-        }
-
-        return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT);
     }
 }

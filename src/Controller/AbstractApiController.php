@@ -6,9 +6,10 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
+use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
 
-class AbstractApiController extends AbstractController
+abstract class AbstractApiController extends AbstractController
 {
 
     /**
@@ -38,7 +39,7 @@ class AbstractApiController extends AbstractController
         ];
 
         return $this->createNotFoundException(
-            $this->serializer->serialize($data, 'json')
+            $this->serializer->serialize($data, JsonEncoder::FORMAT)
         );
     }
 
@@ -55,7 +56,7 @@ class AbstractApiController extends AbstractController
         ];
 
         return new BadRequestHttpException(
-            $this->serializer->serialize($data, 'json')
+            $this->serializer->serialize($data, JsonEncoder::FORMAT)
         );
     }
 }

@@ -13,8 +13,14 @@ services:
     image: "mariadb"
     restart: "always"
     environment:
+      MARIADB_DATABASE: tmhcc-notes
+      MARIADB_USER: root
       MARIADB_ROOT_PASSWORD: "Pas_W0rd"
     ports:
       - "3306:3306"
     volumes:
       - ./var/lib/mysql:/var/lib/mysql
+      - ./docker/mysql/sql:/docker-entrypoint-initdb.d # load sql files from here on a fresh start
+
+volumes:
+  mysql:

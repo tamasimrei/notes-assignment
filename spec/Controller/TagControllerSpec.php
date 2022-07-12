@@ -2,28 +2,27 @@
 
 namespace spec\App\Controller;
 
+use App\Controller\AbstractApiController;
 use App\Controller\TagController;
 use App\Service\TagService;
 use PhpSpec\ObjectBehavior;
 use Symfony\Component\Serializer\SerializerInterface;
-use Symfony\Component\Validator\Validator\ValidatorInterface;
 
 class TagControllerSpec extends ObjectBehavior
 {
     function let(
-        TagService $tagService,
         SerializerInterface $serializer,
-        ValidatorInterface $validator
+        TagService $tagService
     ) {
         $this->beConstructedWith(
-            $tagService,
             $serializer,
-            $validator
+            $tagService
         );
     }
 
     function it_is_initializable()
     {
         $this->shouldHaveType(TagController::class);
+        $this->shouldHaveType(AbstractApiController::class);
     }
 }

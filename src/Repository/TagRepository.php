@@ -19,8 +19,20 @@ class TagRepository extends ServiceEntityRepository
 
     /**
      * @param Tag $tag
+     * @return Tag
      */
-    public function remove(Tag $tag)
+    public function persist(Tag $tag): Tag
+    {
+        $this->getEntityManager()->persist($tag);
+        $this->getEntityManager()->flush();
+        return $tag;
+    }
+
+    /**
+     * @param Tag $tag
+     * @return void
+     */
+    public function remove(Tag $tag): void
     {
         $this->getEntityManager()->remove($tag);
         $this->getEntityManager()->flush();
