@@ -12,7 +12,7 @@ class TagService extends AbstractEntityService
     /**
      * @var TagRepository
      */
-    private $tagRepository;
+    private TagRepository $tagRepository;
 
     /**
      * @param TagRepository $tagRepository
@@ -27,6 +27,19 @@ class TagService extends AbstractEntityService
     }
 
     /**
+     * @param Tag $tag
+     * @return Tag|null
+     */
+    public function find(Tag $tag): ?Tag
+    {
+        if (! is_null($tag->getId())) {
+            return $this->findById($tag->getId());
+        }
+
+        return $this->tagRepository->findOneBy(['name' => $tag->getName()]);
+    }
+
+    /**
      * @param int $tagId
      * @return Tag|null
      */
@@ -38,7 +51,7 @@ class TagService extends AbstractEntityService
     /**
      * @return Tag[]
      */
-    public function findAll(): array
+    public function getAllTags(): array
     {
         return $this->tagRepository->findBy(
             [],
@@ -56,17 +69,11 @@ class TagService extends AbstractEntityService
     }
 
     /**
-     * @param int $tagId
-     * @return bool
+     * @param Tag $tag
+     * @return void
      */
-    public function deleteById(int $tagId): bool
+    public function deleteTag(Tag $tag): void
     {
-        $tag = $this->findById($tagId);
-        if (empty($tag)) {
-            return false;
-        }
-
         $this->tagRepository->remove($tag);
-        return true;
     }
 }

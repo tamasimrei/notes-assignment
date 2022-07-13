@@ -3,6 +3,7 @@
 namespace App\Service;
 
 use App\Entity\Note;
+use App\Entity\Tag;
 use App\Repository\NoteRepository;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -15,30 +16,29 @@ class NoteService extends AbstractEntityService
     private NoteRepository $noteRepository;
 
     /**
+     * @var TagService
+     */
+    private TagService $tagService;
+
+    /**
      * @param NoteRepository $noteRepository
      * @param ValidatorInterface $validator
+     * @param TagService $tagService
      */
     public function __construct(
         NoteRepository $noteRepository,
-        ValidatorInterface $validator
+        ValidatorInterface $validator,
+        TagService $tagService
     ) {
         $this->noteRepository = $noteRepository;
+        $this->tagService = $tagService;
         parent::__construct($validator);
-    }
-
-    /**
-     * @param int $noteId
-     * @return Note|null
-     */
-    public function findById(int $noteId): ?Note
-    {
-        return $this->noteRepository->find($noteId);
     }
 
     /**
      * @return Note[]
      */
-    public function findAll(): array
+    public function getAllNotes(): array
     {
         return $this->noteRepository->findBy(
             [],
@@ -52,21 +52,32 @@ class NoteService extends AbstractEntityService
      */
     public function saveNote(Note $note): Note
     {
+        $this->saveTags($note);
         return $this->noteRepository->persist($note);
     }
 
     /**
-     * @param int $noteId
-     * @return bool
+     * @param Note $note
+     * @return void
      */
-    public function deleteById(int $noteId): bool
+    public function deleteNote(Note $note): void
     {
-        $note = $this->findById($noteId);
-        if (empty($note)) {
-            return false;
-        }
-
         $this->noteRepository->remove($note);
-        return true;
+    }
+
+    /**
+     * @param Note $note
+     * @return void
+     */
+    private function saveTags(Note $note): void
+    {
+        // Replace submitted tags with real tag entity, if any
+        foreach ($note->getTags() as $tag) {
+            $tagEntity = $this->tagService->find($tag);
+            if ($tagEntity instanceof Tag) {
+                $note->removeTag($tag);
+                $note->addTag($tagEntity);
+            }
+        }
     }
 }

@@ -19,46 +19,52 @@ class Tag
      * @ORM\GeneratedValue()
      * @ORM\Column(type="integer")
      */
-    private $id;
+    private int $id;
 
     /**
      * @var string
      * @ORM\Column(type="text")
      * @Constraints\NotBlank
      */
-    private $name;
+    private string $name;
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
+        if (! isset($this->id)) {
+            return null;
+        }
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      * @return self
      */
-    public function setId($id)
+    public function setId(?int $id): static
     {
         $this->id = $id;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getName()
+    public function getName(): ?string
     {
+        if (! isset($this->name)) {
+            return null;
+        }
         return $this->name;
     }
 
     /**
-     * @param string $name
+     * @param string|null $name
      * @return self
      */
-    public function setName($name)
+    public function setName(?string $name): static
     {
         $this->name = $name;
         return $this;

@@ -32,7 +32,22 @@ class JsonApiProblemNormalizer implements NormalizerInterface
             throw new InvalidArgumentException();
         }
 
-        return json_decode($object->getMessage());
+        try {
+            $error = json_decode(
+                $object->getMessage(),
+                true,
+                512,
+                JSON_THROW_ON_ERROR
+            );
+        } catch (\JsonException $exception) {
+            $error = [
+                'code' => $object->getStatusCode(),
+                'message' => $object->getStatusText(),
+                'errors' => []
+            ];
+        }
+
+        return $error;
     }
 
     /**

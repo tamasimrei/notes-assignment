@@ -12,8 +12,8 @@ use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
-use Symfony\Component\Serializer\Normalizer\DateTimeNormalizer;
 use Symfony\Component\Serializer\SerializerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class NoteController extends AbstractApiController
 {
@@ -31,8 +31,28 @@ class NoteController extends AbstractApiController
         SerializerInterface $serializer,
         NoteService $noteService
     ) {
-        parent::__construct($serializer);
         $this->noteService = $noteService;
+        parent::__construct($serializer);
+    }
+
+    /**
+     * @Route("/api/note", name="get_notes", methods={"GET"}, format="json")
+     * @return JsonResponse
+     */
+    public function getNotesAction(): JsonResponse
+    {
+        return $this->json($this->noteService->getAllNotes());
+    }
+
+    /**
+     * @Route("/api/note/{noteId}", name="get_one_note", methods={"GET"}, format="json")
+     * @ParamConverter("note", options={"mapping":{"noteId":"id"}})
+     * @param Note $note
+     * @return JsonResponse
+     */
+    public function getOneNoteAction(Note $note): JsonResponse
+    {
+        return $this->json($note);
     }
 
     /**
@@ -48,28 +68,61 @@ class NoteController extends AbstractApiController
     }
 
     /**
-     * @param Request $request
-     * @return Note
-     * @throws BadRequestHttpException
+     * @Route("/api/note/{noteId}", name="delete_note", methods={"DELETE"}, format="json")
+     * @ParamConverter("note", options={"mapping":{"noteId":"id"}})
+     * @param Note $note
+     * @return Response
      */
-    private function getValidNoteFromRequest(Request $request): Note
+    public function deleteOneNoteAction(Note $note): Response
     {
-        $note = $this->getNoteFromRequest($request);
+        $this->noteService->deleteNote($note);
+        return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT);
+    }
+
+    /**
+     * @Route("/api/note/{noteId}", name="update_note", methods={"PUT","PATCH"}, format="json")
+     * @ParamConverter("note", options={"mapping":{"noteId":"id"}})
+     * @param Request $request
+     * @param Note $note
+     * @return JsonResponse
+     */
+    public function updateNoteAction(Request $request, Note $note): JsonResponse
+    {
+        $note = $this->getValidNoteFromRequest($request, $note);
+        $note = $this->noteService->saveNote($note);
+        return $this->json($note);
+    }
+
+    /**
+     * @param Request $request
+     * @param object|null $objectToPopulate
+     * @return Note
+     */
+    private function getValidNoteFromRequest(Request $request, object $objectToPopulate = null): Note
+    {
+        $note = $this->getNoteFromRequest($request, $objectToPopulate);
         $this->validateNote($note);
         return $note;
     }
 
     /**
      * @param Request $request
+     * @param object|null $objectToPopulate
      * @return Note
      */
-    private function getNoteFromRequest(Request $request): Note
+    private function getNoteFromRequest(Request $request, ?object $objectToPopulate): Note
     {
+        $context = [];
+        if (isset($objectToPopulate)) {
+            $context['object_to_populate'] = $objectToPopulate;
+        }
+
         try {
             $note = $this->serializer->deserialize(
                 (string)$request->getContent(),
                 Note::class,
-                JsonEncoder::FORMAT
+                JsonEncoder::FORMAT,
+                $context
             );
         } catch (NotEncodableValueException $e) {
             throw $this->createJsonBadRequestHttpException('Cannot Decode Request');

@@ -13,6 +13,7 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
+use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class TagController extends AbstractApiController
 {
@@ -40,21 +41,17 @@ class TagController extends AbstractApiController
      */
     public function getTagsAction(): JsonResponse
     {
-        return $this->json($this->tagService->findAll());
+        return $this->json($this->tagService->getAllTags());
     }
 
     /**
      * @Route("/api/tag/{tagId}", name="get_one_tag", methods={"GET"}, format="json")
-     * @param int $tagId
+     * @ParamConverter("tag", options={"mapping":{"tagId":"id"}})
+     * @param Tag $tag
      * @return JsonResponse
      */
-    public function getOneTagAction(int $tagId): JsonResponse
+    public function getOneTagAction(Tag $tag): JsonResponse
     {
-        $tag = $this->tagService->findById($tagId);
-        if (!$tag) {
-            throw $this->createJsonNotFoundException('Tag Not Found');
-        }
-
         return $this->json($tag);
     }
 
@@ -72,16 +69,13 @@ class TagController extends AbstractApiController
 
     /**
      * @Route("/api/tag/{tagId}", name="delete_tag", methods={"DELETE"}, format="json")
-     * @param int $tagId
+     * @ParamConverter("tag", options={"mapping":{"tagId":"id"}})
+     * @param Tag $tag
      * @return Response
      */
-    public function deleteOneTagAction(int $tagId): Response
+    public function deleteOneTagAction(Tag $tag): Response
     {
-        $removed = $this->tagService->deleteById($tagId);
-        if (!$removed) {
-            throw $this->createJsonNotFoundException('Tag Not Found');
-        }
-
+        $this->tagService->deleteTag($tag);
         return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT);
     }
 

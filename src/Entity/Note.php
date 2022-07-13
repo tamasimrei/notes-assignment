@@ -18,38 +18,38 @@ class Note
      * @var int
      * @ORM\Id()
      * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
+     * @ORM\Column(type="integer",nullable=false)
      */
-    private $id;
+    private int $id;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="text",nullable=true)
      * @Constraints\NotBlank
      */
-    private $title;
+    private ?string $title = null;
 
     /**
-     * @var string
+     * @var string|null
      * @ORM\Column(type="text",nullable=true)
      */
-    private $description;
+    private ?string $description = null;
 
     /**
      * @var DateTime
-     * @ORM\Column(type="datetime")
+     * @ORM\Column(type="datetime",nullable=false)
      */
-    private $createdAt;
+    private DateTime $createdAt;
 
     /**
-     * @var Collection|Tag[]
-     * @ORM\ManyToMany(targetEntity="Tag",cascade={"remove", "persist"})
+     * @var Collection
+     * @ORM\ManyToMany(targetEntity="Tag",cascade={"persist","merge","refresh"})
      * @ORM\JoinTable(name="note_tag",
-     *     joinColumns={@ORM\JoinColumn(name="note_id", referencedColumnName="id")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id")}
+     *     joinColumns={@ORM\JoinColumn(name="note_id", referencedColumnName="id", onDelete="CASCADE")},
+     *     inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")}
      * )
      */
-    private $tags;
+    private Collection $tags;
 
     public function __construct()
     {
@@ -58,54 +58,57 @@ class Note
     }
 
     /**
-     * @return int
+     * @return int|null
      */
-    public function getId()
+    public function getId(): ?int
     {
+        if (! isset($this->id)) {
+            return null;
+        }
         return $this->id;
     }
 
     /**
-     * @param int $id
+     * @param int|null $id
      * @return self
      */
-    public function setId($id)
+    public function setId(?int $id): static
     {
         $this->id = $id;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getTitle()
+    public function getTitle(): ?string
     {
         return $this->title;
     }
 
     /**
-     * @param string $title
+     * @param string|null $title
      * @return self
      */
-    public function setTitle($title)
+    public function setTitle(?string $title): static
     {
         $this->title = $title;
         return $this;
     }
 
     /**
-     * @return string
+     * @return string|null
      */
-    public function getDescription()
+    public function getDescription(): ?string
     {
         return $this->description;
     }
 
     /**
-     * @param string $description
+     * @param string|null $description
      * @return self
      */
-    public function setDescription($description)
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
         return $this;
@@ -114,26 +117,26 @@ class Note
     /**
      * @return DateTime
      */
-    public function getCreatedAt()
+    public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
     }
 
     /**
-     * @return Collection|Tag[]
+     * @return array|Tag[]
      */
-    public function getTags()
+    public function getTags(): array
     {
-        return $this->tags;
+        return $this->tags->getValues();
     }
 
     /**
-     * @param ArrayCollection|Tag[] $tags
+     * @param array|Collection|Tag[] $tags
      * @return Note
      */
-    public function setTags(Collection $tags)
+    public function setTags(array|Collection $tags): static
     {
-        $this->tags = $tags;
+        $this->tags = ($tags instanceof Collection) ? $tags : new ArrayCollection($tags);
         return $this;
     }
 
@@ -141,7 +144,7 @@ class Note
      * @param Tag $tag
      * @return bool
      */
-    public function hasTag(Tag $tag)
+    public function hasTag(Tag $tag): bool
     {
         return $this->tags->contains($tag);
     }
@@ -150,10 +153,23 @@ class Note
      * @param Tag $tag
      * @return $this
      */
-    public function addTag(Tag $tag)
+    public function addTag(Tag $tag): static
     {
-        if (! $this->hasTag($tag)) {
+        if (!$this->hasTag($tag)) {
             $this->tags->add($tag);
+        }
+
+        return $this;
+    }
+
+    /**
+     * @param Tag $tag
+     * @return $this
+     */
+    public function removeTag(Tag $tag): static
+    {
+        if ($this->hasTag($tag)) {
+            $this->tags->removeElement($tag);
         }
 
         return $this;

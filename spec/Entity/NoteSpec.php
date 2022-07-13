@@ -5,7 +5,6 @@ namespace spec\App\Entity;
 use App\Entity\Note;
 use App\Entity\Tag;
 use DateTime;
-use Doctrine\Common\Collections\Collection;
 use PhpSpec\ObjectBehavior;
 
 class NoteSpec extends ObjectBehavior
@@ -43,12 +42,10 @@ class NoteSpec extends ObjectBehavior
 
     function it_can_have_tags(Tag $tag)
     {
-        $this->getTags()->shouldBeAnInstanceOf(Collection::class);
+        $this->getTags()->shouldReturn([]);
         $this->hasTag($tag)->shouldReturn(false);
         $this->addTag($tag)->shouldReturn($this);
         $this->hasTag($tag)->shouldReturn(true);
-        $tags = $this->getTags();
-        $tags->shouldBeAnInstanceOf(Collection::class);
-        $tags->shouldContain($tag);
+        $this->getTags()->shouldReturn([$tag]);
     }
 }
