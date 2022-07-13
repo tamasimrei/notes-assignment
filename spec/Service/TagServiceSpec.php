@@ -74,4 +74,36 @@ class TagServiceSpec extends ObjectBehavior
             ]
         ]);
     }
+
+    function it_can_find_a_tag_by_id(
+        $tagRepository,
+        Tag $tagWithId
+    ) {
+        $tagWithId->getId()->willReturn(123);
+        $tagRepository->find(123)->willReturn($tagWithId);
+
+        $this->find($tagWithId)->shouldReturn($tagWithId);
+    }
+
+    function it_can_find_a_tag_by_name(
+        $tagRepository,
+        Tag $tagWithOnlyName
+    ) {
+        $tagWithOnlyName->getId()->willReturn(null);
+        $tagWithOnlyName->getName()->willReturn('foobar');
+        $tagRepository->findOneBy(['name' => 'foobar'])->willReturn($tagWithOnlyName);
+
+        $this->find($tagWithOnlyName)->shouldReturn($tagWithOnlyName);
+    }
+
+    function it_returns_null_trying_to_find_an_empty_tag(
+        $tagRepository,
+        Tag $emptyTag
+    ) {
+        $emptyTag->getId()->willReturn(null);
+        $emptyTag->getName()->willReturn(null);
+        $tagRepository->findOneBy(['name' => null])->willReturn(null);
+
+        $this->find($emptyTag)->shouldReturn(null);
+    }
 }

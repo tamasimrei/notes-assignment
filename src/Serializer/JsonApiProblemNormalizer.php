@@ -3,6 +3,7 @@
 namespace App\Serializer;
 
 use ArrayObject;
+use JsonException;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
 use Symfony\Component\Serializer\Exception\CircularReferenceException;
 use Symfony\Component\Serializer\Exception\ExceptionInterface;
@@ -39,7 +40,7 @@ class JsonApiProblemNormalizer implements NormalizerInterface
                 512,
                 JSON_THROW_ON_ERROR
             );
-        } catch (\JsonException $exception) {
+        } catch (JsonException $exception) {
             $error = [
                 'code' => $object->getStatusCode(),
                 'message' => $object->getStatusText(),
@@ -65,7 +66,6 @@ class JsonApiProblemNormalizer implements NormalizerInterface
         // FIXME
         // service disabled
         return false;
-
 
 
 
