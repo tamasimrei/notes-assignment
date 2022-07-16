@@ -29,6 +29,16 @@ class Tag
     private string $name;
 
     /**
+     * @param string|null $name
+     */
+    public function __construct(?string $name)
+    {
+        if (isset($name)) {
+            $this->name = $name;
+        }
+    }
+
+    /**
      * @return int|null
      */
     public function getId(): ?int

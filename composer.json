@@ -1,7 +1,6 @@
 {
     "name": "tmhcc-cplg/notes",
-    "description": "A simple notest web application",
-    "version": "0.0.1",
+    "description": "A simple notes web application",
     "type": "project",
     "license": "proprietary",
     "require": {
@@ -80,6 +79,12 @@
         }
     },
     "require-dev": {
-        "phpspec/phpspec": "*"
+        "ext-xmlwriter": "*",
+        "doctrine/doctrine-fixtures-bundle": "^3.4",
+        "phpspec/phpspec": "*",
+        "symfony/browser-kit": "4.4.*",
+        "symfony/css-selector": "4.4.*",
+        "symfony/maker-bundle": "*",
+        "symfony/phpunit-bridge": "^6.1"
     }
 }
