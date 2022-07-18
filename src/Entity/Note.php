@@ -24,7 +24,7 @@ class Note
 
     /**
      * @var string|null
-     * @ORM\Column(type="text",nullable=true)
+     * @ORM\Column(type="text",nullable=false)
      * @Constraints\NotBlank
      */
     private ?string $title = null;
@@ -120,6 +120,16 @@ class Note
     public function getCreatedAt(): DateTime
     {
         return $this->createdAt;
+    }
+
+    /**
+     * @param DateTime $createdAt
+     * @return self
+     */
+    public function setCreatedAt(DateTime $createdAt): static
+    {
+        $this->createdAt = $createdAt;
+        return $this;
     }
 
     /**

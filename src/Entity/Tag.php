@@ -31,7 +31,7 @@ class Tag
     /**
      * @param string|null $name
      */
-    public function __construct(?string $name)
+    public function __construct(?string $name = null)
     {
         if (isset($name)) {
             $this->name = $name;

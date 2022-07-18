@@ -7,20 +7,17 @@ services:
       - "80:8080"
     volumes:
       - "./:/var/www/html"
-    command: sh -c "composer install && supervisord -c /etc/supervisor/conf.d/supervisord.conf"
+    command: 'sh -c "composer install && supervisord -c /etc/supervisor/conf.d/supervisord.conf"'
 
   db:
     image: "mariadb"
     restart: "always"
     environment:
-      MARIADB_DATABASE: tmhcc-notes
-      MARIADB_USER: root
+      MARIADB_DATABASE: "tmhcc-notes"
+      MARIADB_USER: "root"
       MARIADB_ROOT_PASSWORD: "Pas_W0rd"
     ports:
       - "3306:3306"
     volumes:
-      - ./var/lib/mysql:/var/lib/mysql
-      - ./docker/mysql/sql:/docker-entrypoint-initdb.d # load sql files from here on a fresh start
-
-volumes:
-  mysql:
+      - "./var/lib/mysql:/var/lib/mysql"
+      - "./docker/mysql/sql:/docker-entrypoint-initdb.d" # load sql files from here on a fresh start

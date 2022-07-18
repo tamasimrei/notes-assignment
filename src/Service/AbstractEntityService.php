@@ -2,7 +2,6 @@
 
 namespace App\Service;
 
-use App\Entity\Tag;
 use Symfony\Component\Validator\ConstraintViolation;
 use Symfony\Component\Validator\Validator\ValidatorInterface;
 
@@ -20,14 +19,6 @@ abstract class AbstractEntityService
     public function __construct(ValidatorInterface $validator)
     {
         $this->validator = $validator;
-    }
-
-    /**
-     * @return ValidatorInterface
-     */
-    public function getValidator(): ValidatorInterface
-    {
-        return $this->validator;
     }
 
     /**
