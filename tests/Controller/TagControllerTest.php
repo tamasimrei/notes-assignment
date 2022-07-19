@@ -3,38 +3,28 @@
 namespace App\Tests\Controller;
 
 use stdClass;
-use Symfony\Bundle\FrameworkBundle\KernelBrowser;
-use Symfony\Bundle\FrameworkBundle\Test\WebTestCase;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
-class TagControllerTest extends WebTestCase
+class TagControllerTest extends AbstractApiControllerTest
 {
 
-    /**
-     * @var KernelBrowser
-     */
-    private KernelBrowser $client;
-
-    /**
-     * @return void
-     */
     public function testCreateErrorOnInvalidJson(): void
     {
-        $this->client = static::createClient();
         $this->client->catchExceptions(false);
-        $this->expectException(BadRequestHttpException::class);
 
-        $this->client->xmlHttpRequest(
-            'POST',
-            '/api/tag',
-            [],
-            [],
-            [],
-            "''"
-        );
-
-        $this->assertResponseStatusCodeSame(400);
+        try {
+            $this->client->xmlHttpRequest(
+                'POST',
+                '/api/tag',
+                [],
+                [],
+                [],
+                "'foo'"
+            );
+        } catch (BadRequestHttpException $exception) {
+            $this->assertSame(400, $exception->getStatusCode());
+        }
     }
 
     /**
@@ -42,9 +32,6 @@ class TagControllerTest extends WebTestCase
      */
     public function testCreateTag(): array
     {
-        $this->client = static::createClient();
-        $this->client->catchExceptions(false);
-
         return [
             $this->subTestCreateTag('foo'),
             $this->subTestCreateTag('bar'),
@@ -66,14 +53,9 @@ class TagControllerTest extends WebTestCase
             json_encode(['name' => $tagName])
         );
 
-        $this->assertResponseIsSuccessful();
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertResponseHasHeader('Content-Type');
-        $this->assertResponseHeaderSame('Content-Type', 'application/json');
+        $this->assertSuccessfulJsonResponse();
 
-        $responseContent = $this->client->getResponse()->getContent();
-        $this->assertNotEmpty($responseContent);
-        $tagSaved = json_decode($responseContent, false, JSON_THROW_ON_ERROR);
+        $tagSaved = $this->getDecodedResponseContents();
         $this->assertInstanceOf(stdClass::class, $tagSaved);
         $this->assertIsInt($tagSaved->id);
         $this->assertSame($tagName, $tagSaved->name);
@@ -85,26 +67,18 @@ class TagControllerTest extends WebTestCase
      * @depends testCreateTag
      *
      * @param array $tags
-     * @return array
+     * @return stdClass[]
      */
     public function testGetAllTags(array $tags): array
     {
-        $this->client = static::createClient();
-
         $this->client->xmlHttpRequest(
             'GET',
             '/api/tag'
         );
 
-        $this->assertResponseIsSuccessful();
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertResponseHasHeader('Content-Type');
-        $this->assertResponseHeaderSame('Content-Type', 'application/json');
+        $this->assertSuccessfulJsonResponse();
 
-        $responseContent = $this->client->getResponse()->getContent();
-        $this->assertNotEmpty($responseContent);
-        $tagsReturned = json_decode($responseContent, false, JSON_THROW_ON_ERROR);
-
+        $tagsReturned = $this->getDecodedResponseContents();
         $this->assertIsArray($tagsReturned);
 
         // test if tags are sorted by alphabetically by name
@@ -118,25 +92,18 @@ class TagControllerTest extends WebTestCase
      * @depends testGetAllTags
      *
      * @param array $tags
-     * @return array
+     * @return stdClass[]
      */
     public function testGetOneTag(array $tags): array
     {
-        $this->client = static::createClient();
-
         $this->client->xmlHttpRequest(
             'GET',
             sprintf('/api/tag/%d', $tags[0]->id)
         );
 
-        $this->assertResponseIsSuccessful();
-        $this->assertResponseStatusCodeSame(200);
-        $this->assertResponseHasHeader('Content-Type');
-        $this->assertResponseHeaderSame('Content-Type', 'application/json');
+        $this->assertSuccessfulJsonResponse();
 
-        $responseContent = $this->client->getResponse()->getContent();
-        $this->assertNotEmpty($responseContent);
-        $tagReturned = json_decode($responseContent, false, JSON_THROW_ON_ERROR);
+        $tagReturned = $this->getDecodedResponseContents();
         $this->assertEquals($tags[0], $tagReturned);
 
         return $tags;
@@ -144,7 +111,6 @@ class TagControllerTest extends WebTestCase
 
     public function testCreateTagExistingName(): void
     {
-        $this->client = static::createClient();
         $this->client->catchExceptions(false);
 
         $fooTag = $this->subTestCreateTag('qux');
@@ -172,7 +138,6 @@ class TagControllerTest extends WebTestCase
      */
     public function testDeleteTag(array $tags): void
     {
-        $this->client = static::createClient();
         foreach ($tags as $tag) {
             $this->subTestDeleteTag($tag);
         }
