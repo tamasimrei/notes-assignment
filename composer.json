@@ -23,6 +23,7 @@
         "symfony/property-access": "^5.0.0",
         "symfony/property-info": "^5.0.0",
         "symfony/proxy-manager-bridge": "^5.0.0",
+        "symfony/runtime": "^5.0.0",
         "symfony/serializer": "^5.0.0",
         "symfony/twig-bundle": "^5.0.0",
         "symfony/validator": "^5.0.0",
@@ -31,7 +32,8 @@
     "config": {
         "allow-plugins": {
             "composer/package-versions-deprecated": true,
-            "symfony/flex": true
+            "symfony/flex": true,
+            "symfony/runtime": true
         },
         "preferred-install": {
             "*": "dist"
