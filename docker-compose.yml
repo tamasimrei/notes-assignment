@@ -1,6 +1,6 @@
 version: "3.9"
 services:
-  webapi:
+  web:
     build: "."
     image: "notes:latest"
     ports:
@@ -21,16 +21,6 @@ services:
     volumes:
       - "./var/lib/mysql:/var/lib/mysql"
       - "./docker/mysql/sql:/docker-entrypoint-initdb.d" # load sql files from here on a fresh start
-
-  web:
-    image: "nginx"
-    environment:
-      NGINX_HOST: localhost
-      NGINX_PORT: 80
-    ports:
-      - "80:80"
-    volumes:
-      - "./notes-frontend/build:/usr/share/nginx/html:ro"
 
   node:
     image: "node"
