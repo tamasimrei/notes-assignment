@@ -8,32 +8,34 @@ import "./style.css"
 export default function App() {
     return (
         <>
+        <Container fluid className={"px-4 py-4"}>
             <BrowserRouter>
                 <Nav>
                     <Nav.Item>
                         <Nav.Link
                             as={NavLink}
                             to={"/"}
+                            className={"text-uppercase"}
                         >Notes</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link
                             as={NavLink}
                             to={"/tags"}
+                            className={"text-uppercase"}
                         >Tags</Nav.Link>
                     </Nav.Item>
                 </Nav>
-                <Container fluid>
                     <Row>
-                        <Col style={{padding: '0 1em'}}>
+                        <Col className={"px-4"}>
                             <Routes>
                                 <Route exact path="/" element={<Notes/>}/>
                                 <Route exact path="/tags" element={<Tags/>}/>
                             </Routes>
                         </Col>
                     </Row>
-                </Container>
             </BrowserRouter>
+        </Container>
         </>
     )
 }

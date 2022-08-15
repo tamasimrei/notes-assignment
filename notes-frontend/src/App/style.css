@@ -2,7 +2,6 @@
     color: #C9C9C9;
     font-size: x-large;
     font-weight: bold;
-    text-transform: uppercase;
 }
 
 .nav-link.active, a:hover.nav-link {
