@@ -11,31 +11,28 @@ export default function Notes() {
             </Row>
             <Row>
                 <Col>
-                    <Row className={"align-items-baseline"}>
+                    <Row className={"align-items-baseline pb-1"}>
                         <Col
-                            xs={4}
+                            xs={6}
                             className={"fs-4 fw-bold"}
                         >
                             Note Title 1
                         </Col>
                         <Col
-                            xs={4}
-                            className={"text-end pe-5 fs-6 fst-italic text-muted"}
+                            xs={5}
+                            className={"text-end pe-4 fs-6 fst-italic text-muted"}
                         >
                             Created 11:13 am Aug 12, 2022
                         </Col>
                     </Row>
                     <Row>
                         <Col
-                            xs={8}
+                            xs={11}
                             className={"fs-6"}
                         >
                             Note Description - Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
                             tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
-                            exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor
-                            in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur
-                            sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id
-                            est laborum.
+                            exercitation commodo consequat.
                         </Col>
                     </Row>
                     <Row className={"mt-2 fs-6"}>
@@ -45,7 +42,7 @@ export default function Notes() {
                         </Col>
                     </Row>
                     <Row>
-                        <Col xs={8}><hr /></Col>
+                        <Col xs={11}><hr /></Col>
                     </Row>
                 </Col>
             </Row>

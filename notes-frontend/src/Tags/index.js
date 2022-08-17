@@ -1,35 +1,41 @@
-import React from 'react'
-import {Button, Col, Form, Row} from 'react-bootstrap'
+import React, {useState} from 'react'
+import AddTagForm from "./AddTagForm"
+import TagRow from "./TagRow"
 
 export default function Tags() {
+
+    // TODO fetch tags from the API
+    const tempTagData =   [
+        {id: 1, name: "Tag 1"},
+        {id: 2, name: "Tag 2"},
+        {id: 3, name: "Tag 3"},
+        {id: 4, name: "Tag 4"}
+    ]
+
+    const [tagData] = useState(tempTagData)
+
+    function addTag(tagName) {
+        // TODO create tag via API
+        return {id: 234, name:tagName}
+    }
+
+    function deleteTag(tagId) {
+        // TODO delete tag via API
+        console.log(tagId)
+    }
+
+    const tagRows = tagData.map(
+        tag => <TagRow
+            key={tag.id}
+            tag={tag}
+            onDelete={deleteTag}
+        />
+    )
+
     return (
         <>
-                <Form>
-                    <Row className={"pt-4 pb-5"}>
-                        <Col xs={3}>
-                            <Form.Control type="text" />
-                        </Col>
-                        <Col>
-                            <Button>Add Tag</Button>
-                        </Col>
-                    </Row>
-                    <Row className={"fs-5"}>
-                        <Col xs={2} className={"fw-bold"}>Tag 1</Col>
-                        <Col><Button variant={"link"}>delete</Button></Col>
-                    </Row>
-                    <Row className={"fs-5"}>
-                        <Col xs={2} className={"fw-bold"}>Tag 2</Col>
-                        <Col><Button variant={"link"}>delete</Button></Col>
-                    </Row>
-                    <Row className={"fs-5"}>
-                        <Col xs={2} className={"fw-bold"}>Tag 3</Col>
-                        <Col><Button variant={"link"}>delete</Button></Col>
-                    </Row>
-                    <Row className={"fs-5"}>
-                        <Col xs={2} className={"fw-bold"}>Tag 4</Col>
-                        <Col><Button variant={"link"}>delete</Button></Col>
-                    </Row>
-                </Form>
+            <AddTagForm onAddTag={addTag} />
+            {tagRows}
         </>
     )
 }

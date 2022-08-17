@@ -6,6 +6,9 @@ import Tags from "../Tags"
 import "./style.css"
 
 export default function App() {
+
+    const navLinkClassName = "text-uppercase fw-bold fs-3"
+
     return (
         <>
         <Container fluid className={"px-4 py-4"}>
@@ -15,14 +18,14 @@ export default function App() {
                         <Nav.Link
                             as={NavLink}
                             to={"/"}
-                            className={"text-uppercase"}
+                            className={navLinkClassName}
                         >Notes</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link
                             as={NavLink}
                             to={"/tags"}
-                            className={"text-uppercase"}
+                            className={navLinkClassName}
                         >Tags</Nav.Link>
                     </Nav.Item>
                 </Nav>

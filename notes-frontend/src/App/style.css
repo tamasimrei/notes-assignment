@@ -1,7 +1,5 @@
 .nav-link {
     color: #C9C9C9;
-    font-size: x-large;
-    font-weight: bold;
 }
 
 .nav-link.active, a:hover.nav-link {
