@@ -10,27 +10,26 @@ export default function App() {
     const navLinkClassName = "text-uppercase fw-bold fs-3"
 
     return (
-        <>
-        <Container fluid className={"px-4 py-4"}>
+        <Container className="py-5">
             <BrowserRouter>
                 <Nav>
                     <Nav.Item>
                         <Nav.Link
                             as={NavLink}
-                            to={"/"}
+                            to="/"
                             className={navLinkClassName}
                         >Notes</Nav.Link>
                     </Nav.Item>
                     <Nav.Item>
                         <Nav.Link
                             as={NavLink}
-                            to={"/tags"}
+                            to="/tags"
                             className={navLinkClassName}
                         >Tags</Nav.Link>
                     </Nav.Item>
                 </Nav>
                     <Row>
-                        <Col className={"px-4"}>
+                        <Col className="px-4">
                             <Routes>
                                 <Route exact path="/" element={<Notes/>}/>
                                 <Route exact path="/tags" element={<Tags/>}/>
@@ -39,6 +38,5 @@ export default function App() {
                     </Row>
             </BrowserRouter>
         </Container>
-        </>
     )
 }

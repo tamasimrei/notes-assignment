@@ -5,7 +5,7 @@ import TagRow from "./TagRow"
 export default function Tags() {
 
     // TODO fetch tags from the API
-    const tempTagData =   [
+    const tempTagData = [
         {id: 1, name: "Tag 1"},
         {id: 2, name: "Tag 2"},
         {id: 3, name: "Tag 3"},
@@ -24,18 +24,17 @@ export default function Tags() {
         console.log(tagId)
     }
 
-    const tagRows = tagData.map(
-        tag => <TagRow
-            key={tag.id}
-            tag={tag}
-            onDelete={deleteTag}
-        />
-    )
-
     return (
         <>
             <AddTagForm onAddTag={addTag} />
-            {tagRows}
+
+            {tagData.map(tag =>
+                <TagRow
+                    key={tag.id}
+                    tag={tag}
+                    onDelete={deleteTag}
+                />
+            )}
         </>
     )
 }
