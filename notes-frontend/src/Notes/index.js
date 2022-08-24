@@ -47,6 +47,8 @@ export default function Notes() {
         getNotesDataAsync().then(() => setIsLoading(false))
     }, [])
 
+    // TODO add create note modal
+
     if (isLoading) {
         return (
             <LoadingSpinner />

@@ -11,34 +11,34 @@ export default function Tags() {
     const [tagData, setTagData] = useState([])
 
     // TODO replace this with the API
-    const tagsApiUrl = 'http://localhost:3000/test_tags.json'
+    //const tagsApiUrl = 'http://localhost:3000/test_tags.json'
+    const tagsApiUrl = 'http://localhost:8080/api/tag'
 
     function addTag(tagName) {
         // TODO create tag via API
-        return {id: 234, name: tagName}
+        const newTag = {
+            id: Math.floor(Math.random() * 1000000 ) + 1,
+            name: tagName
+        }
+
+        const newTagData = [...tagData, newTag]
+        newTagData.sort((a, b) => ('' + a.name).localeCompare(b.name))
+        setTagData(tagData => newTagData)
     }
 
     function deleteTag(tagId) {
         // TODO delete tag via API
-        console.log(tagId)
+        setTagData(tagData => tagData.filter(tag => tag.id !== tagId))
     }
 
     useEffect(() => {
         const getTagDataAsync = async () => {
             try {
-
-
-
-                // FIXME DEBUG
-                await new Promise(r => setTimeout(r, 1000))
-
-
-
                 const tagData = await axios.get(
                     tagsApiUrl,
                     {
                         method: "GET",
-                        timeout: 2000
+                        timeout: 20000
                     }
                 )
 

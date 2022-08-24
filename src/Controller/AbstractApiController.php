@@ -9,7 +9,7 @@ use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\SerializerInterface;
 
-abstract class AbstractApiController extends AbstractController
+abstract class AbstractApiController extends AbstractController implements CORSSubjectInterface
 {
 
     /**

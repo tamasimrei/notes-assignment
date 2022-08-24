@@ -17,9 +17,7 @@ export default function AddTagForm(props) {
             return
         }
 
-        const tag = onAddTag(tagName)
-        // TODO handle data returned by the API
-        console.log(tag)
+        onAddTag(tagName)
         setValidated(false)
         setTagName('')
     }
