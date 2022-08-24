@@ -5,34 +5,44 @@ export default function AddTagForm(props) {
 
     const [tagName, setTagName] = useState('')
 
-    function handleAddTag(onAddTag) {
+    const [validated, setValidated] = useState(false);
+
+    function handleSubmit(event, onAddTag) {
+        event.preventDefault()
+
+        const form = event.currentTarget
+        if (form.checkValidity() !== true) {
+            setValidated(true)
+            event.stopPropagation()
+            return
+        }
+
         const tag = onAddTag(tagName)
         // TODO handle data returned by the API
         console.log(tag)
+        setValidated(false)
         setTagName('')
     }
 
-    function handleKeyUp(event, onAddTag) {
-        if (event.key === 'Enter') {
-            handleAddTag(onAddTag)
-        }
-    }
-
     return (
-        <Form onSubmit={e => e.preventDefault()}>
-            <Row className={"pt-4 pb-5"}>
+        <Form onSubmit={e => handleSubmit(e, props.onAddTag)} noValidate validated={validated}>
+            <Row className="pt-4 pb-5">
                 <Col xs={3}>
                     <Form.Control
                         type="text"
+                        name="tagName"
                         onChange={e => setTagName(e.target.value)}
-                        onKeyUp={(e) => handleKeyUp(e, props.onAddTag)}
                         value={tagName}
+                        required
+                        placeholder="Enter tag name"
+                        onBlur={() => setValidated(false)}
                     />
+                    <Form.Control.Feedback type="invalid">
+                        Please provide a tag name
+                    </Form.Control.Feedback>
                 </Col>
                 <Col>
-                    <Button
-                        onClick={() => handleAddTag(props.onAddTag)}
-                    >
+                    <Button type="submit">
                         Add Tag
                     </Button>
                 </Col>
