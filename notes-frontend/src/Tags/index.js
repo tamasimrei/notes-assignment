@@ -10,38 +10,43 @@ export default function Tags() {
 
     const [tagData, setTagData] = useState([])
 
-    // TODO replace this with the API
-    //const tagsApiUrl = 'http://localhost:3000/test_tags.json'
-    const tagsApiUrl = 'http://localhost:8080/api/tag'
+    const httpClient = axios.create({
+        // TODO store API base url in env
+        //baseURL: "http://localhost:3000/test_tags.json",
+        baseURL: 'http://localhost:8080/api/tag',
+        timeout: 20000
+    });
 
-    function addTag(tagName) {
-        // TODO create tag via API
-        const newTag = {
-            id: Math.floor(Math.random() * 1000000 ) + 1,
-            name: tagName
+    const addTag = async (tagName) => {
+        try {
+            let response = await httpClient.post('', {
+                name: tagName
+            })
+            let newTagData = [...tagData, response.data]
+            newTagData.sort((a, b) => ('' + a.name).localeCompare(b.name))
+            setTagData(tagData => newTagData)
+        } catch (error) {
+            // TODO implement error handling
+            // see error.response.status
+            console.log(error)
         }
-
-        const newTagData = [...tagData, newTag]
-        newTagData.sort((a, b) => ('' + a.name).localeCompare(b.name))
-        setTagData(tagData => newTagData)
     }
 
-    function deleteTag(tagId) {
-        // TODO delete tag via API
-        setTagData(tagData => tagData.filter(tag => tag.id !== tagId))
+    const deleteTag = async (tagId) => {
+        try {
+            let response = await httpClient.delete('/' + tagId)
+            setTagData(tagData => tagData.filter(tag => tag.id !== tagId))
+        } catch (error) {
+            // TODO implement error handling
+            // see error.response.status
+            console.log(error)
+        }
     }
 
     useEffect(() => {
         const getTagDataAsync = async () => {
             try {
-                const tagData = await axios.get(
-                    tagsApiUrl,
-                    {
-                        method: "GET",
-                        timeout: 20000
-                    }
-                )
-
+                let tagData = await httpClient.get('')
                 if (!tagData || !tagData.data) {
                     throw new Error("No Tag data found")
                 }
