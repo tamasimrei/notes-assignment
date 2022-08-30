@@ -1,9 +1,9 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import axios from "axios"
 import {Button, Col, Row} from "react-bootstrap"
 import LoadingSpinner from "../App/LoadingSpinner"
 import Note from "./Note"
-import AddNoteModal from "./AddNoteModal";
+import AddNoteModal from "./AddNoteModal"
 
 export default function Notes() {
 
@@ -13,19 +13,21 @@ export default function Notes() {
 
     const [notesData, setNotesData] = useState([])
 
-    const httpClient = axios.create({
-        // TODO store API base url in env
-        //baseURL: 'http://localhost:3000/test_notes.json',
-        baseURL: 'http://localhost:8080/api/note',
-        timeout: 20000
-    });
+    const httpClient = useMemo(() => {
+        return axios.create({
+            // TODO store API base url in env
+            baseURL: 'http://localhost:8080/api',
+            timeout: 20000
+        })
+    }, [])
 
-    const onAddNoteModalClose = async (saveNote) => {
+    const onAddNoteModalClose = async (newNote) => {
 
+        // TODO implement saving new note
 
 
         // FIXME DEBUG
-        console.log(saveNote)
+        console.log(newNote)
 
 
 
@@ -35,7 +37,7 @@ export default function Notes() {
     useEffect(() => {
         const getNotesDataAsync = async () => {
             try {
-                let notesData = await httpClient.get('')
+                let notesData = await httpClient.get('/note')
                 if (!notesData || !notesData.data) {
                     throw new Error("No Notes received")
                 }
@@ -49,20 +51,27 @@ export default function Notes() {
         }
 
         getNotesDataAsync().then(() => setIsLoading(false))
-    }, [])
+    }, [httpClient])
 
     if (isLoading) {
         return (
-            <LoadingSpinner show={isLoading} />
+            <LoadingSpinner />
         )
     }
 
     return (
         <>
-            <AddNoteModal show={isAddNoteShown} handleClose={onAddNoteModalClose} />
+            <AddNoteModal
+                show={isAddNoteShown}
+                handleClose={onAddNoteModalClose}
+            />
             <Row className="pt-4 pb-5">
                 <Col xs={3}>
-                    <Button className="px-4" variant="outline-dark" onClick={() => setAddNoteShown(true)}>
+                    <Button
+                        className="px-4"
+                        variant="outline-dark"
+                        onClick={() => setAddNoteShown(true)}
+                    >
                         Add Note
                     </Button>
                 </Col>

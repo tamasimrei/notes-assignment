@@ -1,6 +1,6 @@
 import React from "react"
-import {Col, Row} from "react-bootstrap";
-import NoteTag from "./NoteTag";
+import {Col, Row} from "react-bootstrap"
+import NoteTag from "./NoteTag"
 
 export default function Note(props) {
 

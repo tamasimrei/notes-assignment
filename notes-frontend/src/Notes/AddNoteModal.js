@@ -21,12 +21,24 @@ export default function AddNoteModal(props) {
         })
     }
 
+    // TODO implement form validation
+
     return (
         <>
-            <Modal centered show={props.show} onHide={() => props.handleClose(null)}>
-                <Form onSubmit={(e) => e.preventDefault()}>
+            <Modal
+                centered
+                show={props.show}
+                onHide={() => props.handleClose(null)}
+            >
+                <Form
+                    onSubmit={(e) => e.preventDefault()}
+                >
                     <Modal.Header closeButton>
-                        <Modal.Title className="text-uppercase fw-bold fs-4">Add Note</Modal.Title>
+                        <Modal.Title
+                            className="text-uppercase fw-bold fs-4"
+                        >
+                            Add Note
+                        </Modal.Title>
                     </Modal.Header>
                     <Modal.Body>
                         <Container>
@@ -37,7 +49,10 @@ export default function AddNoteModal(props) {
                                     </Form.Label>
                                 </Col>
                                 <Col md={8}>
-                                    <Form.Control name="title" onChange={handleChange}/>
+                                    <Form.Control
+                                        name="title"
+                                        onChange={handleChange}
+                                    />
                                 </Col>
                             </Row>
                             <Row className="p-2 fs-5">
@@ -47,7 +62,12 @@ export default function AddNoteModal(props) {
                                     </Form.Label>
                                 </Col>
                                 <Col md={8}>
-                                    <Form.Control as="textarea" name="description" onChange={handleChange} style={{height: "7em"}} />
+                                    <Form.Control
+                                        as="textarea"
+                                        name="description"
+                                        onChange={handleChange}
+                                        style={{height: "7em"}}
+                                    />
                                 </Col>
                             </Row>
                             <Row className="p-2 fs-5">
@@ -57,16 +77,29 @@ export default function AddNoteModal(props) {
                                     </Form.Label>
                                 </Col>
                                 <Col md={8}>
-                                    <Form.Select multiple size={3} name="tags"/>
+                                    <Form.Select
+                                        multiple
+                                        size={3}
+                                        name="tags"
+                                    />
                                 </Col>
                             </Row>
                         </Container>
                     </Modal.Body>
                     <Modal.Footer>
-                        <Button variant="outline-dark" className="px-5" onClick={() => props.handleClose(null)}>
+                        <Button
+                            variant="outline-dark"
+                            className="px-5"
+                            onClick={() => props.handleClose(null)}
+                        >
                             Cancel
                         </Button>
-                        <Button type="submit" variant="outline-dark" className="px-5" onClick={() => props.handleClose(note)}>
+                        <Button
+                            type="submit"
+                            variant="outline-dark"
+                            className="px-5"
+                            onClick={() => props.handleClose(note)}
+                        >
                             Add
                         </Button>
                     </Modal.Footer>

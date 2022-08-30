@@ -10,5 +10,5 @@ export default function LoadingSpinner() {
                 </Spinner>
             </Col>
         </Row>
-    );
+    )
 }

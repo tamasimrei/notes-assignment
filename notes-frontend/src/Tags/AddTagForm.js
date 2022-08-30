@@ -5,7 +5,7 @@ export default function AddTagForm(props) {
 
     const [tagName, setTagName] = useState('')
 
-    const [validated, setValidated] = useState(false);
+    const [validated, setValidated] = useState(false)
 
     function handleSubmit(event, onAddTag) {
         event.preventDefault()

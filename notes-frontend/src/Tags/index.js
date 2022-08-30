@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, {useEffect, useMemo, useState} from 'react'
 import axios from "axios"
 import LoadingSpinner from "../App/LoadingSpinner"
 import AddTagForm from "./AddTagForm"
@@ -10,16 +10,17 @@ export default function Tags() {
 
     const [tagData, setTagData] = useState([])
 
-    const httpClient = axios.create({
-        // TODO store API base url in env
-        //baseURL: "http://localhost:3000/test_tags.json",
-        baseURL: 'http://localhost:8080/api/tag',
-        timeout: 20000
-    });
+    const httpClient = useMemo(() => {
+        return axios.create({
+            // TODO store API base url in env
+            baseURL: 'http://localhost:8080/api',
+            timeout: 20000
+        })
+    }, [])
 
     const addTag = async (tagName) => {
         try {
-            let response = await httpClient.post('', {
+            let response = await httpClient.post('/tag', {
                 name: tagName
             })
             let newTagData = [...tagData, response.data]
@@ -34,7 +35,7 @@ export default function Tags() {
 
     const deleteTag = async (tagId) => {
         try {
-            await httpClient.delete('/' + tagId)
+            await httpClient.delete('/tag/' + tagId)
             setTagData(tagData => tagData.filter(tag => tag.id !== tagId))
         } catch (error) {
             // TODO implement error handling
@@ -46,7 +47,7 @@ export default function Tags() {
     useEffect(() => {
         const getTagDataAsync = async () => {
             try {
-                let tagData = await httpClient.get('')
+                let tagData = await httpClient.get('/tag')
                 if (!tagData || !tagData.data) {
                     throw new Error("No Tags received")
                 }
@@ -60,14 +61,13 @@ export default function Tags() {
         }
 
         getTagDataAsync().then(() => setIsLoading(false))
-    }, [])
+    }, [httpClient])
 
     if (isLoading) {
         return (
             <LoadingSpinner />
         )
     }
-
 
     return (
         <>
