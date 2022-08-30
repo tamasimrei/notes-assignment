@@ -40,7 +40,7 @@ export default function AddTagForm(props) {
                     </Form.Control.Feedback>
                 </Col>
                 <Col>
-                    <Button type="submit">
+                    <Button type="submit" variant="outline-dark">
                         Add Tag
                     </Button>
                 </Col>

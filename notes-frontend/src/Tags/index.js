@@ -34,7 +34,7 @@ export default function Tags() {
 
     const deleteTag = async (tagId) => {
         try {
-            let response = await httpClient.delete('/' + tagId)
+            await httpClient.delete('/' + tagId)
             setTagData(tagData => tagData.filter(tag => tag.id !== tagId))
         } catch (error) {
             // TODO implement error handling
@@ -48,7 +48,7 @@ export default function Tags() {
             try {
                 let tagData = await httpClient.get('')
                 if (!tagData || !tagData.data) {
-                    throw new Error("No Tag data found")
+                    throw new Error("No Tags received")
                 }
                 setTagData(tagData.data)
             } catch(error) {
@@ -67,6 +67,7 @@ export default function Tags() {
             <LoadingSpinner />
         )
     }
+
 
     return (
         <>

@@ -12,8 +12,9 @@ export default function TagRow(props) {
             </Col>
             <Col>
                 <Button
-                    variant={"link"}
+                    variant="link"
                     onClick={() => props.onDelete(props.tag.id)}
+                    className="link-danger"
                 >
                     delete
                 </Button>
