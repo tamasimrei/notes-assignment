@@ -30,9 +30,9 @@ export default function AddNoteModal(props) {
 
         if (target.type === "checkbox") {
             if (target.checked) {
-                addTag(target.dataset.tagId, target.dataset.tagName)
+                addTag(parseInt(target.dataset.tagId), target.dataset.tagName)
             } else {
-                removeTag(target.dataset.tagId)
+                removeTag(parseInt(target.dataset.tagId))
             }
             return
         }

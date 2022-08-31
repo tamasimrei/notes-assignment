@@ -48,6 +48,7 @@ class Note
      *     joinColumns={@ORM\JoinColumn(name="note_id", referencedColumnName="id", onDelete="CASCADE")},
      *     inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")}
      * )
+     * @ORM\OrderBy({"name" = "ASC"})
      */
     private Collection $tags;
 

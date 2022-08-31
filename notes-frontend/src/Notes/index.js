@@ -7,21 +7,10 @@ import AddNoteModal from "./AddNoteModal"
 
 export default function Notes() {
 
-
-    // TODO load tags from API
-    const tagsAvailable = [
-        {"id": 1, "name": "tag 1"},
-        {"id": 2, "name": "tag 2"},
-        {"id": 3, "name": "tag 3"},
-        {"id": 4, "name": "tag 4"},
-        {"id": 5, "name": "tag 5"}
-    ]
-
-
-
     const [isLoading, setIsLoading] = useState(true)
     const [isAddNoteShown, setAddNoteShown] = useState(false)
     const [notesData, setNotesData] = useState([])
+    const [tagsAvailable, setTagsAvailable] = useState([])
 
     const httpClient = useMemo(() => {
         return axios.create({
@@ -31,17 +20,60 @@ export default function Notes() {
         })
     }, [])
 
+    const compareNoteDateStrings = (a, b) => {
+        let aDate = new Date(a.createdAt)
+        let bDate = new Date(b.createdAt)
+
+        if (aDate < bDate) {
+            return -1
+        }
+
+        if (aDate > bDate) {
+            return 1
+        }
+
+        return 0
+    }
+
+    const showAddNoteModal = async () => {
+        setIsLoading(true)
+        try {
+            let tagData = await httpClient.get('/tag')
+            if (!tagData || !tagData.data) {
+                throw new Error("No Tags received")
+            }
+            setTagsAvailable(tagData.data)
+        } catch(error) {
+            // TODO implement error handling
+            // see error.response.status
+            console.log(error)
+        }
+        setIsLoading(false)
+        setAddNoteShown(true)
+    }
+
     const onAddNoteModalClose = async (newNote) => {
-
-        // TODO implement saving new note
-
-
-        // FIXME DEBUG
-        console.log(newNote)
-
-
-
         setAddNoteShown(false)
+
+        if (! newNote) {
+            return
+        }
+
+        try {
+            let response = await httpClient.post('/note', newNote)
+            if (!response || !response.data) {
+                throw new Error("No created Note returned")
+            }
+
+            let noteCreated = response.data
+            let updatedNotesData = [...notesData, noteCreated]
+            updatedNotesData.sort((a, b) => compareNoteDateStrings(b, a)) // sorting reverse
+            setNotesData(updatedNotesData)
+        } catch (error) {
+            // TODO implement error handling
+            // see error.response.status
+            console.log(error)
+        }
     }
 
     useEffect(() => {
@@ -81,7 +113,7 @@ export default function Notes() {
                     <Button
                         className="px-4"
                         variant="outline-dark"
-                        onClick={() => setAddNoteShown(true)}
+                        onClick={showAddNoteModal}
                     >
                         Add Note
                     </Button>

@@ -2,32 +2,21 @@
 
 namespace App\Serializer;
 
-use ArrayObject;
-use JsonException;
 use Symfony\Component\ErrorHandler\Exception\FlattenException;
-use Symfony\Component\Serializer\Exception\CircularReferenceException;
-use Symfony\Component\Serializer\Exception\ExceptionInterface;
 use Symfony\Component\Serializer\Exception\InvalidArgumentException;
-use Symfony\Component\Serializer\Exception\LogicException;
 use Symfony\Component\Serializer\Normalizer\NormalizerInterface;
 
+/**
+ * Flatten the Symfony JSON exception to our custom error message
+ * including the message from controllers
+ */
 class JsonApiProblemNormalizer implements NormalizerInterface
 {
 
     /**
-     * Normalizes an object into a set of arrays/scalars.
-     *
-     * @param mixed $object Object to normalize
-     * @param string $format Format the normalization result will be encoded as
-     * @param array $context Context options for the normalizer
-     * @return array|string|int|float|bool|ArrayObject|null \ArrayObject is used to make sure an empty object is encoded as an object not an array
-     * @throws InvalidArgumentException   Occurs when the object given is not a supported type for the normalizer
-     * @throws CircularReferenceException Occurs when the normalizer detects a circular reference when no circular
-     *                                    reference handler can fix it
-     * @throws LogicException             Occurs when the normalizer is not called in an expected context
-     * @throws ExceptionInterface         Occurs for all the other cases of errors
+     * @inheritDoc
      */
-    public function normalize($object, $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = [])
     {
         if (!$object instanceof FlattenException) {
             throw new InvalidArgumentException();
@@ -40,7 +29,7 @@ class JsonApiProblemNormalizer implements NormalizerInterface
                 512,
                 JSON_THROW_ON_ERROR
             );
-        } catch (JsonException $exception) {
+        } catch (\JsonException $exception) {
             $error = [
                 'code' => $object->getStatusCode(),
                 'message' => $object->getStatusText(),
@@ -52,25 +41,10 @@ class JsonApiProblemNormalizer implements NormalizerInterface
     }
 
     /**
-     * @param mixed $data Data to normalize
-     * @param string $format The format being (de-)serialized from or into
-     * @return bool
+     * @inheritDoc
      */
-    public function supportsNormalization($data, $format = null): bool
+    public function supportsNormalization($data, string $format = null): bool
     {
-
-
-
-
-
-        // FIXME
-        // service disabled
-        return false;
-
-
-
-
-
         return $data instanceof FlattenException;
     }
 }

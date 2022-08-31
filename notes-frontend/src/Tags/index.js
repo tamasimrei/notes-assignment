@@ -22,6 +22,10 @@ export default function Tags() {
             let response = await httpClient.post('/tag', {
                 name: tagName
             })
+            if (!tagData || !tagData.data) {
+                throw new Error("Created Tag not received")
+            }
+
             let newTagData = [...tagData, response.data]
             newTagData.sort((a, b) => ('' + a.name).localeCompare(b.name))
             setTagData(tagData => newTagData)
