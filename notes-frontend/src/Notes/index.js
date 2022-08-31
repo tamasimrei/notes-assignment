@@ -7,10 +7,20 @@ import AddNoteModal from "./AddNoteModal"
 
 export default function Notes() {
 
+
+    // TODO load tags from API
+    const tagsAvailable = [
+        {"id": 1, "name": "tag 1"},
+        {"id": 2, "name": "tag 2"},
+        {"id": 3, "name": "tag 3"},
+        {"id": 4, "name": "tag 4"},
+        {"id": 5, "name": "tag 5"}
+    ]
+
+
+
     const [isLoading, setIsLoading] = useState(true)
-
     const [isAddNoteShown, setAddNoteShown] = useState(false)
-
     const [notesData, setNotesData] = useState([])
 
     const httpClient = useMemo(() => {
@@ -63,6 +73,7 @@ export default function Notes() {
         <>
             <AddNoteModal
                 show={isAddNoteShown}
+                tagsAvailable={tagsAvailable}
                 handleClose={onAddNoteModalClose}
             />
             <Row className="pt-4 pb-5">

@@ -10,10 +10,32 @@ export default function AddNoteModal(props) {
     }
 
     const [note, setNote] = useState(emptyNote)
+    const [tags, setTags] = useState([])
 
-    function handleChange(event) {
+    const [validated, setValidated] = useState(false)
+
+    function addTag(tagId, tagName) {
+        let newTagData = [...tags, {id: tagId, name: tagName}]
+        newTagData.sort((a, b) => ('' + a.name).localeCompare(b.name))
+        setTags(newTagData)
+    }
+
+    function removeTag(tagId) {
+        setTags(tags => tags.filter(tag => tag.id !== tagId))
+    }
+
+    function handleInputChange(event) {
         const target = event.target
         const inputName = target.name
+
+        if (target.type === "checkbox") {
+            if (target.checked) {
+                addTag(target.dataset.tagId, target.dataset.tagName)
+            } else {
+                removeTag(target.dataset.tagId)
+            }
+            return
+        }
 
         setNote({
             ...note,
@@ -21,17 +43,42 @@ export default function AddNoteModal(props) {
         })
     }
 
-    // TODO implement form validation
+    function handleModalClose() {
+        setValidated(false)
+        setTags([])
+        props.handleClose(null)
+    }
+
+    function handleFormSubmit(event) {
+        event.preventDefault()
+
+        if (event.target.checkValidity() !== true) {
+            setValidated(true)
+            event.stopPropagation()
+            return
+        }
+
+        setValidated(false)
+        setTags([])
+
+        props.handleClose({
+            ...note,
+            tags: tags
+        })
+    }
 
     return (
         <>
             <Modal
-                centered
                 show={props.show}
-                onHide={() => props.handleClose(null)}
+                centered
+                onSubmit={handleFormSubmit}
+                onHide={() => handleModalClose()}
             >
                 <Form
                     onSubmit={(e) => e.preventDefault()}
+                    noValidate
+                    validated={validated}
                 >
                     <Modal.Header closeButton>
                         <Modal.Title
@@ -51,8 +98,12 @@ export default function AddNoteModal(props) {
                                 <Col md={8}>
                                     <Form.Control
                                         name="title"
-                                        onChange={handleChange}
+                                        onChange={handleInputChange}
+                                        required
                                     />
+                                    <Form.Control.Feedback type="invalid" className="fs-6">
+                                        This field is required
+                                    </Form.Control.Feedback>
                                 </Col>
                             </Row>
                             <Row className="p-2 fs-5">
@@ -65,9 +116,13 @@ export default function AddNoteModal(props) {
                                     <Form.Control
                                         as="textarea"
                                         name="description"
-                                        onChange={handleChange}
+                                        onChange={handleInputChange}
+                                        required
                                         style={{height: "7em"}}
                                     />
+                                    <Form.Control.Feedback type="invalid" className="fs-6">
+                                        This field is required
+                                    </Form.Control.Feedback>
                                 </Col>
                             </Row>
                             <Row className="p-2 fs-5">
@@ -77,11 +132,22 @@ export default function AddNoteModal(props) {
                                     </Form.Label>
                                 </Col>
                                 <Col md={8}>
-                                    <Form.Select
-                                        multiple
-                                        size={3}
-                                        name="tags"
-                                    />
+                                    <div
+                                        className="px-2 py-1"
+                                        style={{height: "5.75em", overflowY: "auto", border: "var(--bs-modal-header-border-width) solid var(--bs-modal-header-border-color)"}}
+                                    >
+                                        {props.tagsAvailable.map(tag =>
+                                            <Form.Check
+                                                onChange={handleInputChange}
+                                                key={tag.id}
+                                                id={"new_note_tag-" + tag.id}
+                                                type="checkbox"
+                                                label={tag.name}
+                                                data-tag-id={tag.id}
+                                                data-tag-name={tag.name}
+                                            />
+                                        )}
+                                    </div>
                                 </Col>
                             </Row>
                         </Container>
@@ -90,7 +156,7 @@ export default function AddNoteModal(props) {
                         <Button
                             variant="outline-dark"
                             className="px-5"
-                            onClick={() => props.handleClose(null)}
+                            onClick={handleModalClose}
                         >
                             Cancel
                         </Button>
@@ -98,7 +164,6 @@ export default function AddNoteModal(props) {
                             type="submit"
                             variant="outline-dark"
                             className="px-5"
-                            onClick={() => props.handleClose(note)}
                         >
                             Add
                         </Button>

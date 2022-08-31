@@ -7,23 +7,27 @@ export default function AddTagForm(props) {
 
     const [validated, setValidated] = useState(false)
 
-    function handleSubmit(event, onAddTag) {
+    function handleSubmit(event) {
         event.preventDefault()
 
-        const form = event.currentTarget
+        const form = event.target
         if (form.checkValidity() !== true) {
             setValidated(true)
             event.stopPropagation()
             return
         }
 
-        onAddTag(tagName)
+        props.onAddTag(tagName)
         setValidated(false)
         setTagName('')
     }
 
     return (
-        <Form onSubmit={e => handleSubmit(e, props.onAddTag)} noValidate validated={validated}>
+        <Form
+            onSubmit={handleSubmit}
+            noValidate
+            validated={validated}
+        >
             <Row className="pt-4 pb-5">
                 <Col xs={3}>
                     <Form.Control

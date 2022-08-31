@@ -7,7 +7,6 @@ import TagRow from "./TagRow"
 export default function Tags() {
 
     const [isLoading, setIsLoading] = useState(true)
-
     const [tagData, setTagData] = useState([])
 
     const httpClient = useMemo(() => {
