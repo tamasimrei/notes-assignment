@@ -16,7 +16,7 @@ class JsonApiProblemNormalizer implements NormalizerInterface
     /**
      * @inheritDoc
      */
-    public function normalize($object, string $format = null, array $context = [])
+    public function normalize($object, string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         if (!$object instanceof FlattenException) {
             throw new InvalidArgumentException();

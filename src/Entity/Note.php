@@ -70,10 +70,10 @@ class Note
     }
 
     /**
-     * @param int|null $id
+     * @param int $id
      * @return self
      */
-    public function setId(?int $id): static
+    public function setId(int $id): static
     {
         $this->id = $id;
         return $this;

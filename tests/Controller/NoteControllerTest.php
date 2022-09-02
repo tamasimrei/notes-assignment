@@ -5,7 +5,7 @@ namespace App\Tests\Controller;
 use stdClass;
 use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
-class NoteControllerControllerTest extends AbstractApiControllerTest
+class NoteControllerTest extends AbstractApiControllerTest
 {
 
     public function testCreateErrorOnInvalidJson(): void
@@ -35,8 +35,8 @@ class NoteControllerControllerTest extends AbstractApiControllerTest
             'title' => 'Some Random Note',
             'description' => 'Here go the details',
             'tags' => [
-                ['name' => 'foo'],
                 ['name' => 'bar'],
+                ['name' => 'foo'],
             ]
         ];
 
