@@ -1,12 +1,14 @@
-import React, {useEffect, useMemo, useState} from 'react'
+import React, {useContext, useEffect, useMemo, useState} from 'react'
 import axios from "axios"
 import {Button, Col, Row} from "react-bootstrap"
+import AlertContext from "../Alert/AlertContext"
 import LoadingSpinner from "../App/LoadingSpinner"
 import Note from "./Note"
 import AddNoteModal from "./AddNoteModal"
 
 export default function Notes() {
 
+    const { addAlert } = useContext(AlertContext)
     const [isLoading, setIsLoading] = useState(true)
     const [isAddNoteShown, setAddNoteShown] = useState(false)
     const [notesData, setNotesData] = useState([])
@@ -38,15 +40,24 @@ export default function Notes() {
     const showAddNoteModal = async () => {
         setIsLoading(true)
         try {
-            let tagData = await httpClient.get('/tag')
-            if (!tagData || !tagData.data) {
+            let tagsResponse = await httpClient.get('/tag')
+            if (!tagsResponse || !tagsResponse.data) {
                 throw new Error("No Tags received")
             }
-            setTagsAvailable(tagData.data)
+            setTagsAvailable(tagsResponse.data)
         } catch(error) {
             // TODO implement error handling
             // see error.response.status
             console.log(error)
+
+            if (error.response) {
+                // The client was given an error response (5xx, 4xx)
+            } else if (error.request) {
+                // The client never received a response, and the request was never left
+            } else {
+                // Anything else
+            }
+
         }
         setIsLoading(false)
         setAddNoteShown(true)
@@ -60,35 +71,53 @@ export default function Notes() {
         }
 
         try {
-            let response = await httpClient.post('/note', newNote)
-            if (!response || !response.data) {
+            let noteAddedResponse = await httpClient.post('/note', newNote)
+            if (!noteAddedResponse || !noteAddedResponse.data) {
                 throw new Error("No created Note returned")
             }
 
-            let noteCreated = response.data
+            let noteCreated = noteAddedResponse.data
             let updatedNotesData = [...notesData, noteCreated]
-            updatedNotesData.sort((a, b) => compareNoteDateStrings(b, a)) // sorting reverse
+            updatedNotesData.sort((a, b) => compareNoteDateStrings(b, a)) // note: sorting reverse
             setNotesData(updatedNotesData)
+            addAlert('success', 'Note added')
         } catch (error) {
             // TODO implement error handling
             // see error.response.status
             console.log(error)
+
+            if (error.response) {
+                // The client was given an error response (5xx, 4xx)
+            } else if (error.request) {
+                // The client never received a response, and the request was never left
+            } else {
+                // Anything else
+            }
         }
     }
 
     useEffect(() => {
         const getNotesDataAsync = async () => {
             try {
-                let notesData = await httpClient.get('/note')
-                if (!notesData || !notesData.data) {
-                    throw new Error("No Notes received")
+                let notesResponse = await httpClient.get('/note')
+                if (!notesResponse || !notesResponse.data) {
+                    throw new Error("No Notes Received")
                 }
-                setNotesData(notesData.data)
+                setNotesData(notesResponse.data)
+                addAlert('info', 'Notes loaded')
             } catch(error) {
                 // TODO implement error handling
                 // see error.response.status
                 console.log(error)
                 setNotesData([])
+
+                if (error.response) {
+                    // The client was given an error response (5xx, 4xx)
+                } else if (error.request) {
+                    // The client never received a response, and the request was never left
+                } else {
+                    // Anything else
+                }
             }
         }
 
