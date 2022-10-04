@@ -47,9 +47,6 @@ export default function Notes() {
             setTagsAvailable(tagsResponse.data)
         } catch(error) {
             // TODO implement error handling
-            // see error.response.status
-            console.log(error)
-
             if (error.response) {
                 // The client was given an error response (5xx, 4xx)
             } else if (error.request) {
@@ -83,9 +80,6 @@ export default function Notes() {
             addAlert('success', 'Note added')
         } catch (error) {
             // TODO implement error handling
-            // see error.response.status
-            console.log(error)
-
             if (error.response) {
                 // The client was given an error response (5xx, 4xx)
             } else if (error.request) {
@@ -106,13 +100,14 @@ export default function Notes() {
                 setNotesData(notesResponse.data)
                 addAlert('info', 'Notes loaded')
             } catch(error) {
-                // TODO implement error handling
-                // see error.response.status
-                console.log(error)
                 setNotesData([])
 
+                // TODO implement error handling
                 if (error.response) {
                     // The client was given an error response (5xx, 4xx)
+                    console.log(error.response.data);
+                    console.log(error.response.status);
+                    console.log(error.response.headers);
                 } else if (error.request) {
                     // The client never received a response, and the request was never left
                 } else {

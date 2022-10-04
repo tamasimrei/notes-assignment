@@ -11,30 +11,30 @@ export const AlertProvider = ({children}) => {
     const [nextAlertId, setNextAlertId] = useState(1)
 
     const addAlert = (severity, message) => {
-        let autohide, delay, badge, visual
+        let autoHide, delay, badge, visual
 
         switch (severity) {
             case 'error':
-                autohide = false
-                delay = 0
+                autoHide = false
+                delay = null
                 badge = '!'
                 visual = 'danger'
                 break
             case 'warning':
-                autohide = true
+                autoHide = true
                 delay = 10000
                 badge = '!'
                 visual = 'warning'
                 break
             case 'success':
-                autohide = true
+                autoHide = true
                 delay = 3000
                 badge = '='
                 visual = 'success'
                 break
             case 'info':
             default:
-                autohide = true
+                autoHide = true
                 delay = 2000
                 badge = 'o'
                 visual = 'light'
@@ -48,7 +48,7 @@ export const AlertProvider = ({children}) => {
                 'message': message,
                 'visual': visual,
                 'badge': badge,
-                'autohide': autohide,
+                'autohide': autoHide,
                 'delay': delay,
                 'show': true,
                 'timestamp': Date.now()

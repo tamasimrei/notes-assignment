@@ -34,9 +34,6 @@ export default function Tags() {
             addAlert('success', 'Tag added')
         } catch (error) {
             // TODO implement error handling
-            // see error.response.status
-            console.log(error)
-
             if (error.response) {
                 // The client was given an error response (5xx, 4xx)
             } else if (error.request) {
@@ -54,9 +51,6 @@ export default function Tags() {
             addAlert('info', 'Tag deleted')
         } catch (error) {
             // TODO implement error handling
-            // see error.response.status
-            console.log(error)
-
             if (error.response) {
                 // The client was given an error response (5xx, 4xx)
             } else if (error.request) {
@@ -77,11 +71,9 @@ export default function Tags() {
                 setTagData(tagsResponse.data)
                 addAlert('info', 'Tags loaded')
             } catch(error) {
-                // TODO implement error handling
-                // see error.response.status
-                console.log(error)
                 setTagData([])
 
+                // TODO implement error handling
                 if (error.response) {
                     // The client was given an error response (5xx, 4xx)
                 } else if (error.request) {

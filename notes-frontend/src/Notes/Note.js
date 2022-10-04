@@ -6,6 +6,8 @@ export default function Note(props) {
 
     const tags = props.note.tags || []
 
+    const formattedDate = (new Date(props.note.createdAt)).toLocaleString()
+
     return (
         <Row>
             <Col>
@@ -14,7 +16,7 @@ export default function Note(props) {
                         {props.note.title}
                     </Col>
                     <Col xs={5} className="text-end pe-4 fs-6 fst-italic text-muted">
-                        Created {props.note.createdAt}
+                        Created {formattedDate}
                     </Col>
                 </Row>
                 <Row>
