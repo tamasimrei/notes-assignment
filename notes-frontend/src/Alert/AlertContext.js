@@ -3,7 +3,8 @@ import { createContext, useState } from 'react'
 const AlertContext = createContext({
     alerts: [],
     addAlert: () => {},
-    removeAlert: () => {}
+    removeAlert: () => {},
+    addHttpErrorAlert: () => {}
 })
 
 export const AlertProvider = ({children}) => {
@@ -71,13 +72,33 @@ export const AlertProvider = ({children}) => {
         }, 5000)
     }
 
+    const addHttpErrorAlert = (error, errorMessage) => {
+        if (error.response) {
+            if (error.response?.data?.code) {
+                errorMessage += ': ' + error.response.data.code + ' ' + error.response.data.message
+            } else if (error.message) {
+                errorMessage += ': ' + error.message
+            }
+        } else if (error.request) {
+            errorMessage += ': Unable to send request'
+        } else if (error.message) {
+            errorMessage += ': ' + error.message
+        } else {
+            errorMessage += ': Reason unknown'
+        }
+
+        addAlert('error', errorMessage)
+    }
+
+
     return (
         <>
             <AlertContext.Provider
                 value={{
                     alerts,
                     addAlert,
-                    removeAlert
+                    removeAlert,
+                    addHttpErrorAlert
                 }}
             >
                 {children}

@@ -8,7 +8,7 @@ import AddNoteModal from "./AddNoteModal"
 
 export default function Notes() {
 
-    const { addAlert } = useContext(AlertContext)
+    const { addAlert, addHttpErrorAlert } = useContext(AlertContext)
     const [isLoading, setIsLoading] = useState(true)
     const [isAddNoteShown, setAddNoteShown] = useState(false)
     const [notesData, setNotesData] = useState([])
@@ -42,19 +42,11 @@ export default function Notes() {
         try {
             let tagsResponse = await httpClient.get('/tag')
             if (!tagsResponse || !tagsResponse.data) {
-                throw new Error("No Tags received")
+                throw new Error("No tags received")
             }
             setTagsAvailable(tagsResponse.data)
         } catch(error) {
-            // TODO implement error handling
-            if (error.response) {
-                // The client was given an error response (5xx, 4xx)
-            } else if (error.request) {
-                // The client never received a response, and the request was never left
-            } else {
-                // Anything else
-            }
-
+            addHttpErrorAlert(error, 'Error loading tags')
         }
         setIsLoading(false)
         setAddNoteShown(true)
@@ -70,7 +62,7 @@ export default function Notes() {
         try {
             let noteAddedResponse = await httpClient.post('/note', newNote)
             if (!noteAddedResponse || !noteAddedResponse.data) {
-                throw new Error("No created Note returned")
+                throw new Error("No created note returned")
             }
 
             let noteCreated = noteAddedResponse.data
@@ -79,14 +71,7 @@ export default function Notes() {
             setNotesData(updatedNotesData)
             addAlert('success', 'Note added')
         } catch (error) {
-            // TODO implement error handling
-            if (error.response) {
-                // The client was given an error response (5xx, 4xx)
-            } else if (error.request) {
-                // The client never received a response, and the request was never left
-            } else {
-                // Anything else
-            }
+            addHttpErrorAlert(error, 'Error creating note')
         }
     }
 
@@ -95,24 +80,13 @@ export default function Notes() {
             try {
                 let notesResponse = await httpClient.get('/note')
                 if (!notesResponse || !notesResponse.data) {
-                    throw new Error("No Notes Received")
+                    throw new Error("No notes received")
                 }
                 setNotesData(notesResponse.data)
                 addAlert('info', 'Notes loaded')
             } catch(error) {
                 setNotesData([])
-
-                // TODO implement error handling
-                if (error.response) {
-                    // The client was given an error response (5xx, 4xx)
-                    console.log(error.response.data);
-                    console.log(error.response.status);
-                    console.log(error.response.headers);
-                } else if (error.request) {
-                    // The client never received a response, and the request was never left
-                } else {
-                    // Anything else
-                }
+                addHttpErrorAlert(error, 'Error loading notes')
             }
         }
 
