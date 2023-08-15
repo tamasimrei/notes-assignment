@@ -10,6 +10,7 @@ RUN apk add bash sudo \
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
-COPY docker/nginx.conf /etc/nginx/nginx.conf
+# Copy default nginx config file to set file root
+COPY docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 
 USER nobody
