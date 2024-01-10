@@ -6,7 +6,7 @@
 # https://github.com/sequelpro/sequelpro
 #
 # Host: 127.0.0.1 (MySQL 5.5.5-10.8.3-MariaDB-1:10.8.3+maria~jammy)
-# Database: tmhcc-notes
+# Database: tm-notes
 # Generation Time: 2022-07-11 21:00:22 +0000
 # ************************************************************
 

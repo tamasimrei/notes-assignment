@@ -13,7 +13,7 @@ services:
     image: "mariadb"
     restart: "always"
     environment:
-      MARIADB_DATABASE: "tmhcc-notes"
+      MARIADB_DATABASE: "tm-notes"
       MARIADB_USER: "root"
       MARIADB_ROOT_PASSWORD: "Pas_W0rd"
     ports:
