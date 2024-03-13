@@ -1,5 +1,6 @@
 {
     "name": "tamasimrei/notes-assignment",
+    "version": "0.0.1",
     "description": "A simple notes web application",
     "type": "project",
     "license": "proprietary",

@@ -19,8 +19,9 @@ services:
     ports:
       - "3306:3306"
     volumes:
-      - "./var/lib/mysql:/var/lib/mysql"
+      - "./var/lib/mysql:/var/lib/mysql:rw"
       - "./docker/mysql/sql:/docker-entrypoint-initdb.d" # load sql files from here on a fresh start
+    user: mysql
 
   node:
     image: "node"

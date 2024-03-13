@@ -1,11 +1,11 @@
-FROM trafex/php-nginx:latest
+FROM trafex/php-nginx:3.4.0
 
 USER root
 RUN apk add bash sudo \
-    php81-iconv php81-simplexml php81-posix \
-    php81-pdo php81-tokenizer php81-pdo_mysql \
-    php81-xmlwriter \
-    && sed -i "s/^;\(fastcgi\.logging\(\s*\)\?=\).*/\1 0/" /etc/php81/php.ini
+    php82-iconv php82-simplexml php82-posix \
+    php82-pdo php82-tokenizer php82-pdo_mysql \
+    php82-xmlwriter \
+    && sed -i "s/^;\(fastcgi\.logging\(\s*\)\?=\).*/\1 0/" /etc/php82/php.ini
 
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
