@@ -67,7 +67,7 @@ export default function Tags() {
         }
 
         getTagDataAsync().then(() => setIsLoading(false))
-    }, [httpClient])
+    }, [httpClient, addAlert, addHttpErrorAlert])
 
     if (isLoading) {
         return (
