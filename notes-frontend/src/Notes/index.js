@@ -91,7 +91,7 @@ export default function Notes() {
         }
 
         getNotesDataAsync().then(() => setIsLoading(false))
-    }, [])
+    }, [httpClient])
 
     if (isLoading) {
         return (
