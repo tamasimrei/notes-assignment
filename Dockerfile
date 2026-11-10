@@ -1,11 +1,13 @@
-FROM trafex/php-nginx:3.4.0
+FROM trafex/php-nginx:3.11.1
 
 USER root
-RUN apk add bash sudo \
-    php82-iconv php82-simplexml php82-posix \
-    php82-pdo php82-tokenizer php82-pdo_mysql \
-    php82-xmlwriter \
-    && sed -i "s/^;\(fastcgi\.logging\(\s*\)\?=\).*/\1 0/" /etc/php82/php.ini
+RUN apk upgrade --no-cache \
+    && apk add --no-cache bash sudo \
+    php85-iconv php85-simplexml php85-posix \
+    php85-pdo php85-tokenizer php85-pdo_mysql \
+    php85-xmlwriter \
+    && sed -i "s/^;\(fastcgi\.logging\(\s*\)\?=\).*/\1 0/" /etc/php85/php.ini \
+    && echo "error_reporting = E_ALL & ~E_DEPRECATED & ~E_USER_DEPRECATED" > /etc/php85/conf.d/zz-no-deprecations.ini
 
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
