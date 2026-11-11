@@ -19,12 +19,12 @@ class NoteServiceTest extends KernelTestCase
 
     private function getNoteService(): NoteService
     {
-        return self::$container->get(NoteService::class);
+        return self::getContainer()->get(NoteService::class);
     }
 
     private function getTagService(): TagService
     {
-        return self::$container->get(TagService::class);
+        return self::getContainer()->get(TagService::class);
     }
 
     public function testNoteValidation(): void

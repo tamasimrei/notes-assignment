@@ -4,6 +4,7 @@ namespace App\Controller;
 
 use App\Entity\Tag;
 use App\Service\TagService;
+use Symfony\Bridge\Doctrine\Attribute\MapEntity;
 use Symfony\Component\HttpFoundation\JsonResponse;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
@@ -13,7 +14,6 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\Serializer\Encoder\JsonEncoder;
 use Symfony\Component\Serializer\Exception\NotEncodableValueException;
 use Symfony\Component\Serializer\SerializerInterface;
-use Sensio\Bundle\FrameworkExtraBundle\Configuration\ParamConverter;
 
 class TagController extends AbstractApiController
 {
@@ -36,30 +36,29 @@ class TagController extends AbstractApiController
     }
 
     /**
-     * @Route("/api/tag", name="get_tags", methods={"GET"}, format="json")
      * @return JsonResponse
      */
+    #[Route('/api/tag', name: 'get_tags', methods: ['GET'], format: 'json')]
     public function getTagsAction(): JsonResponse
     {
         return $this->json($this->tagService->getAllTags());
     }
 
     /**
-     * @Route("/api/tag/{tagId}", name="get_one_tag", methods={"GET"}, format="json")
-     * @ParamConverter("tag", options={"mapping":{"tagId":"id"}})
      * @param Tag $tag
      * @return JsonResponse
      */
-    public function getOneTagAction(Tag $tag): JsonResponse
+    #[Route('/api/tag/{tagId}', name: 'get_one_tag', methods: ['GET'], format: 'json')]
+    public function getOneTagAction(#[MapEntity(id: 'tagId')] Tag $tag): JsonResponse
     {
         return $this->json($tag);
     }
 
     /**
-     * @Route("/api/tag", name="create_tag", methods={"POST"}, format="json")
      * @param Request $request
      * @return JsonResponse
      */
+    #[Route('/api/tag', name: 'create_tag', methods: ['POST'], format: 'json')]
     public function createTagAction(Request $request): JsonResponse
     {
         $tag = $this->getValidTagFromRequest($request);
@@ -68,12 +67,11 @@ class TagController extends AbstractApiController
     }
 
     /**
-     * @Route("/api/tag/{tagId}", name="delete_tag", methods={"DELETE"}, format="json")
-     * @ParamConverter("tag", options={"mapping":{"tagId":"id"}})
      * @param Tag $tag
      * @return Response
      */
-    public function deleteOneTagAction(Tag $tag): Response
+    #[Route('/api/tag/{tagId}', name: 'delete_tag', methods: ['DELETE'], format: 'json')]
+    public function deleteOneTagAction(#[MapEntity(id: 'tagId')] Tag $tag): Response
     {
         $this->tagService->deleteTag($tag);
         return (new Response())->setStatusCode(Response::HTTP_NO_CONTENT);

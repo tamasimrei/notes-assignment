@@ -3,28 +3,22 @@
 namespace App\Tests\Controller;
 
 use stdClass;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
-use Symfony\Component\HttpKernel\Exception\UnprocessableEntityHttpException;
 
 class TagControllerTest extends AbstractApiControllerTest
 {
 
     public function testCreateErrorOnInvalidJson(): void
     {
-        $this->client->catchExceptions(false);
+        $this->client->xmlHttpRequest(
+            'POST',
+            '/api/tag',
+            [],
+            [],
+            [],
+            "'foo'"
+        );
 
-        try {
-            $this->client->xmlHttpRequest(
-                'POST',
-                '/api/tag',
-                [],
-                [],
-                [],
-                "'foo'"
-            );
-        } catch (BadRequestHttpException $exception) {
-            $this->assertSame(400, $exception->getStatusCode());
-        }
+        $this->assertJsonErrorResponse(400, 'Cannot Decode Request');
     }
 
     /**
@@ -111,9 +105,7 @@ class TagControllerTest extends AbstractApiControllerTest
 
     public function testCreateTagExistingName(): void
     {
-        $this->client->catchExceptions(false);
-
-        $fooTag = $this->subTestCreateTag('qux');
+        $quxTag = $this->subTestCreateTag('qux');
 
         try {
             $this->client->xmlHttpRequest(
@@ -124,9 +116,14 @@ class TagControllerTest extends AbstractApiControllerTest
                 [],
                 json_encode(['name' => 'qux'])
             );
-        } catch (UnprocessableEntityHttpException $exception) {
-            $this->assertSame($exception->getStatusCode(), 422);
-            $this->subTestDeleteTag($fooTag);
+
+            $error = $this->assertJsonErrorResponse(422, 'Tag Validation Failed');
+            $this->assertEquals(
+                [(object)['field' => 'name', 'message' => 'Tag already exists.']],
+                $error->errors
+            );
+        } finally {
+            $this->subTestDeleteTag($quxTag);
         }
     }
 

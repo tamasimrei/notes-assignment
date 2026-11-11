@@ -6,26 +6,18 @@ use Doctrine\ORM\Mapping as ORM;
 use Symfony\Bridge\Doctrine\Validator\Constraints as DoctrineConstraints;
 use Symfony\Component\Validator\Constraints;
 
-/**
- * @ORM\Entity
- * @DoctrineConstraints\UniqueEntity(fields="name", message="Tag already exists.")
- */
+#[ORM\Entity]
+#[DoctrineConstraints\UniqueEntity(fields: 'name', message: 'Tag already exists.')]
 class Tag
 {
 
-    /**
-     * @var int
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer")
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer')]
     private int $id;
 
-    /**
-     * @var string
-     * @ORM\Column(type="text")
-     * @Constraints\NotBlank
-     */
+    #[ORM\Column(type: 'text')]
+    #[Constraints\NotBlank]
     private string $name;
 
     /**

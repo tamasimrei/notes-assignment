@@ -17,7 +17,7 @@ class TagServiceTest extends KernelTestCase
 
     private function getTagService(): TagService
     {
-        return self::$container->get(TagService::class);
+        return self::getContainer()->get(TagService::class);
     }
 
     public function testTagValidation(): void

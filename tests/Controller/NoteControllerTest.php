@@ -3,27 +3,22 @@
 namespace App\Tests\Controller;
 
 use stdClass;
-use Symfony\Component\HttpKernel\Exception\BadRequestHttpException;
 
 class NoteControllerTest extends AbstractApiControllerTest
 {
 
     public function testCreateErrorOnInvalidJson(): void
     {
-        $this->client->catchExceptions(false);
+        $this->client->xmlHttpRequest(
+            'POST',
+            '/api/note',
+            [],
+            [],
+            [],
+            '{"}'
+        );
 
-        try {
-            $this->client->xmlHttpRequest(
-                'POST',
-                '/api/note',
-                [],
-                [],
-                [],
-                '{"}'
-            );
-        } catch (BadRequestHttpException $exception) {
-            $this->assertSame(400, $exception->getStatusCode());
-        }
+        $this->assertJsonErrorResponse(400, 'Cannot Decode Request');
     }
 
     /**
@@ -68,13 +63,13 @@ class NoteControllerTest extends AbstractApiControllerTest
      */
     private function assertReturnedNoteTagNamesEqual(stdClass $note, array $tags): void
     {
-        $this->assertObjectHasAttribute('tags', $note);
+        $this->assertObjectHasProperty('tags', $note);
         $this->assertIsArray($note->tags);
 
         $noteTags = [];
         foreach ($note->tags as $tagSaved) {
             $this->assertInstanceOf(stdClass::class, $tagSaved);
-            $this->assertObjectHasAttribute('name', $tagSaved);
+            $this->assertObjectHasProperty('name', $tagSaved);
             $noteTags[] = ['name' => $tagSaved->name];
         }
 

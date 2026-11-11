@@ -10,9 +10,9 @@ class DefaultController extends AbstractController
 {
 
     /**
-     * @Route("/", name="index")
      * @return Response
      */
+    #[Route('/', name: 'index')]
     public function getIndexAction(): Response
     {
         return $this->render('index.html.twig');

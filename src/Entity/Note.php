@@ -8,48 +8,33 @@ use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 use Symfony\Component\Validator\Constraints;
 
-/**
- * @ORM\Entity
- */
+#[ORM\Entity]
 class Note
 {
 
-    /**
-     * @var int
-     * @ORM\Id()
-     * @ORM\GeneratedValue()
-     * @ORM\Column(type="integer",nullable=false)
-     */
+    #[ORM\Id]
+    #[ORM\GeneratedValue]
+    #[ORM\Column(type: 'integer', nullable: false)]
     private int $id;
 
-    /**
-     * @var string|null
-     * @ORM\Column(type="text",nullable=false)
-     * @Constraints\NotBlank
-     */
+    #[ORM\Column(type: 'text', nullable: false)]
+    #[Constraints\NotBlank]
     private ?string $title = null;
 
-    /**
-     * @var string|null
-     * @ORM\Column(type="text",nullable=true)
-     */
+    #[ORM\Column(type: 'text', nullable: true)]
     private ?string $description = null;
 
-    /**
-     * @var DateTime
-     * @ORM\Column(type="datetime",nullable=false)
-     */
+    #[ORM\Column(type: 'datetime', nullable: false)]
     private DateTime $createdAt;
 
     /**
-     * @var Collection
-     * @ORM\ManyToMany(targetEntity="Tag",cascade={"persist","merge","refresh"})
-     * @ORM\JoinTable(name="note_tag",
-     *     joinColumns={@ORM\JoinColumn(name="note_id", referencedColumnName="id", onDelete="CASCADE")},
-     *     inverseJoinColumns={@ORM\JoinColumn(name="tag_id", referencedColumnName="id", onDelete="CASCADE")}
-     * )
-     * @ORM\OrderBy({"name" = "ASC"})
+     * @var Collection<int, Tag>
      */
+    #[ORM\ManyToMany(targetEntity: Tag::class, cascade: ['persist', 'merge', 'refresh'])]
+    #[ORM\JoinTable(name: 'note_tag')]
+    #[ORM\JoinColumn(name: 'note_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\InverseJoinColumn(name: 'tag_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
+    #[ORM\OrderBy(['name' => 'ASC'])]
     private Collection $tags;
 
     public function __construct()

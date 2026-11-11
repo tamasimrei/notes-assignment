@@ -16,7 +16,7 @@ class JsonApiProblemNormalizer implements NormalizerInterface
     /**
      * @inheritDoc
      */
-    public function normalize($object, string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
+    public function normalize(mixed $object, ?string $format = null, array $context = []): array|string|int|float|bool|\ArrayObject|null
     {
         if (!$object instanceof FlattenException) {
             throw new InvalidArgumentException();
@@ -43,8 +43,16 @@ class JsonApiProblemNormalizer implements NormalizerInterface
     /**
      * @inheritDoc
      */
-    public function supportsNormalization($data, string $format = null): bool
+    public function supportsNormalization(mixed $data, ?string $format = null, array $context = []): bool
     {
         return $data instanceof FlattenException;
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getSupportedTypes(?string $format): array
+    {
+        return [FlattenException::class => true];
     }
 }
