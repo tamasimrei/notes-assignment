@@ -1,4 +1,3 @@
-version: "3.9"
 services:
   web:
     build: "."
@@ -7,7 +6,10 @@ services:
       - "8080:8080"
     volumes:
       - "./:/var/www/html"
-    command: 'sh -c "composer install && supervisord -c /etc/supervisor/conf.d/supervisord.conf"'
+    command: 'sh -c "composer install && php bin/console doctrine:migrations:migrate --no-interaction --allow-no-migration && supervisord -c /etc/supervisor/conf.d/supervisord.conf"'
+    depends_on:
+      db:
+        condition: service_healthy
 
   db:
     image: "mariadb"
@@ -20,8 +22,13 @@ services:
       - "3306:3306"
     volumes:
       - "./var/lib/mysql:/var/lib/mysql:rw"
-      - "./docker/mysql/sql:/docker-entrypoint-initdb.d" # load sql files from here on a fresh start
     user: mysql
+    healthcheck:
+      # TCP only comes up once the entrypoint's init phase is done
+      test: ["CMD", "mariadb-admin", "ping", "-h", "127.0.0.1", "-uroot", "-pPas_W0rd"]
+      interval: 2s
+      timeout: 5s
+      retries: 30
 
   node:
     image: "node:26-alpine"

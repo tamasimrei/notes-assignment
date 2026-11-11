@@ -5,6 +5,9 @@ If you get errors after starting, make sure your database DSN is this in your .e
 
 `docker compose up -d`
 
+The database schema is created by Doctrine migrations when the `web` container starts. To load sample data:
+`docker compose exec web php bin/console doctrine:fixtures:load`
+
 `docker compose logs`
 
 `docker compose down --rmi all -v`
