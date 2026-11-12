@@ -100,6 +100,7 @@ export default function AddNoteModal(props) {
                                         name="title"
                                         onChange={handleInputChange}
                                         required
+                                        autoFocus
                                     />
                                     <Form.Control.Feedback type="invalid" className="fs-6">
                                         This field is required
