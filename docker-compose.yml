@@ -31,7 +31,10 @@ services:
       retries: 30
 
   node:
-    image: "node:26-alpine"
+    build:
+      context: "./docker"
+      dockerfile: "node.Dockerfile"
+    image: "notes-node:latest"
     user: "node"
     working_dir: /home/node/app
     ports:
