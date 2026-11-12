@@ -1,9 +1,11 @@
 # A Simple Web Application for Notes
 
-If you get errors after starting, make sure your database DSN is this in your .env file:
-`DATABASE_URL='mysql://root:Pas_W0rd@db:3306/tm-notes?serverVersion=10.8.3-MariaDB'`
+Start everything with Docker Compose:
 
 `docker compose up -d`
+
+The committed `.env` file holds defaults that work with this Docker setup, so no extra configuration is needed.
+To override a value on your machine (database DSN, CORS origin, app secret), copy `.env.local.sample` to `.env.local` and edit it there; `.env.local` is not committed.
 
 The database schema is created by Doctrine migrations when the `web` container starts. To load sample data:
 `docker compose exec web php bin/console doctrine:fixtures:load`
