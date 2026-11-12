@@ -17,7 +17,7 @@ docker compose down --rmi all -v  # full teardown
 - The `web` container runs `composer install` on startup, and the `node` container runs `npm install && npm start`. The source is bind-mounted, so code changes show up without rebuilding.
 - `DATABASE_URL` must be `mysql://root:Pas_W0rd@db:3306/tm-notes?serverVersion=10.8.3-MariaDB`. Put it in `.env`, which is not committed. `CORS_ALLOW_ORIGIN` is also read from the environment by `config/packages/nelmio_cors.yaml`.
 - **The schema is managed by Doctrine migrations** in `migrations/`. The `web` container runs `doctrine:migrations:migrate` on startup, after the `db` healthcheck passes. For a schema change, update the entities, then generate a migration with `php bin/console doctrine:migrations:diff` and review it. Load sample data with `php bin/console doctrine:fixtures:load` (`src/DataFixtures/AppFixtures.php`). MariaDB data is kept in `./var/lib/mysql`.
-- The frontend's API base URL `http://localhost:8080/api` is hardcoded in `notes-frontend/src/Notes/index.jsx` and `notes-frontend/src/Tags/index.jsx`.
+- The frontend's API base URL comes from `VITE_API_BASE_URL`, read by the shared axios client in `notes-frontend/src/api/httpClient.js`. The default (`http://localhost:8080/api`) is in the committed `notes-frontend/.env`; override it in `notes-frontend/.env.local` or with a real environment variable, which the `node` service forwards when it is set on the host. Vite inlines the value at build time.
 
 ## Tests
 

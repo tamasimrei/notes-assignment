@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react'
-import axios from "axios"
+import React, {useContext, useEffect, useState} from 'react'
+import httpClient from "../api/httpClient"
 import AlertContext from "../Alert/AlertContext"
 import LoadingSpinner from "../App/LoadingSpinner"
 import AddTagForm from "./AddTagForm"
@@ -10,14 +10,6 @@ export default function Tags() {
     const { addAlert, addHttpErrorAlert } = useContext(AlertContext)
     const [tagData, setTagData] = useState([])
     const [isLoading, setIsLoading] = useState(true)
-
-    const httpClient = useMemo(() => {
-        return axios.create({
-            // TODO store API base url in env
-            baseURL: 'http://localhost:8080/api',
-            timeout: 20000
-        })
-    }, [])
 
     const addTag = async (tagName) => {
         try {
@@ -67,7 +59,7 @@ export default function Tags() {
         }
 
         getTagDataAsync().then(() => setIsLoading(false))
-    }, [httpClient])
+    }, [])
 
     if (isLoading) {
         return (

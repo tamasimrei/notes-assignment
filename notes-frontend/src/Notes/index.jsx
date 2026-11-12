@@ -1,5 +1,5 @@
-import React, {useContext, useEffect, useMemo, useState} from 'react'
-import axios from "axios"
+import React, {useContext, useEffect, useState} from 'react'
+import httpClient from "../api/httpClient"
 import {Button, Col, Row} from "react-bootstrap"
 import AlertContext from "../Alert/AlertContext"
 import LoadingSpinner from "../App/LoadingSpinner"
@@ -13,14 +13,6 @@ export default function Notes() {
     const [isAddNoteShown, setAddNoteShown] = useState(false)
     const [notesData, setNotesData] = useState([])
     const [tagsAvailable, setTagsAvailable] = useState([])
-
-    const httpClient = useMemo(() => {
-        return axios.create({
-            // TODO store API base url in env
-            baseURL: 'http://localhost:8080/api',
-            timeout: 20000
-        })
-    }, [])
 
     const compareNoteDateStrings = (a, b) => {
         let aDate = new Date(a.createdAt)
@@ -91,7 +83,7 @@ export default function Notes() {
         }
 
         getNotesDataAsync().then(() => setIsLoading(false))
-    }, [httpClient])
+    }, [])
 
     if (isLoading) {
         return (
