@@ -67,6 +67,20 @@ export default function Notes() {
         }
     }
 
+    const deleteNote = async (noteId) => {
+        try {
+            let response = await httpClient.delete('/note/' + noteId)
+            if (response.status !== 204) {
+                throw new Error('Unexpected HTTP status received: ' + response.status)
+            }
+
+            setNotesData(notesData => notesData.filter(note => note.id !== noteId))
+            addAlert('info', 'Note deleted')
+        } catch (error) {
+            addHttpErrorAlert(error, 'Error deleting note')
+        }
+    }
+
     useEffect(() => {
         const getNotesDataAsync = async () => {
             try {
@@ -111,7 +125,7 @@ export default function Notes() {
             </Row>
 
             {notesData.map(note =>
-                <Note key={note.id} note={note} />
+                <Note key={note.id} note={note} onDelete={deleteNote} />
             )}
         </>
     )
