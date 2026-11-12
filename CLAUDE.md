@@ -4,7 +4,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Overview
 
-A notes app with tagging: a Symfony 6.4 JSON API (PHP 8.5, Doctrine ORM, MariaDB) at the repo root, plus a React frontend built with Vite in `notes-frontend/`. Everything runs through Docker Compose.
+A notes app with tagging: a Symfony 7.4 JSON API (PHP 8.5, Doctrine ORM, MariaDB) at the repo root, plus a React frontend built with Vite in `notes-frontend/`. Everything runs through Docker Compose.
 
 ## Running
 
