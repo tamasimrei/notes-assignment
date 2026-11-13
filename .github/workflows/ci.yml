@@ -1,0 +1,86 @@
+name: CI
+
+on:
+  push:
+    branches: [master]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
+
+env:
+  PHP_VERSION: "8.5"
+  PHP_EXTENSIONS: ctype, iconv, pdo_mysql, posix, simplexml, tokenizer, xmlwriter
+
+jobs:
+  phpspec:
+    name: phpspec (unit specs)
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+
+      - uses: ramsey/composer-install@v3
+
+      - name: Run phpspec
+        run: vendor/bin/phpspec run --no-interaction --format=dot
+
+  phpunit:
+    name: PHPUnit (functional tests)
+    runs-on: ubuntu-latest
+
+    services:
+      db:
+        image: mariadb:11.4
+        env:
+          MARIADB_DATABASE: tm-notes
+          MARIADB_ROOT_PASSWORD: Pas_W0rd
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mariadb-admin ping -h 127.0.0.1 -uroot -pPas_W0rd"
+          --health-interval=2s
+          --health-timeout=5s
+          --health-retries=30
+
+    env:
+      # Same as .env, but the service container is reached on localhost.
+      # In the test environment Doctrine appends "_test" to the database name.
+      DATABASE_URL: "mysql://root:Pas_W0rd@127.0.0.1:3306/tm-notes?serverVersion=11.4.0-MariaDB"
+
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: shivammathur/setup-php@v2
+        with:
+          php-version: ${{ env.PHP_VERSION }}
+          extensions: ${{ env.PHP_EXTENSIONS }}
+          coverage: none
+
+      - uses: ramsey/composer-install@v3
+
+      - name: Create the test database schema
+        run: |
+          php bin/console doctrine:database:create --env=test --if-not-exists
+          php bin/console doctrine:schema:create --env=test
+
+      - name: Run PHPUnit
+        run: vendor/bin/phpunit
+
+      - name: Upload test log on failure
+        if: failure()
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-log
+          path: var/log/test.log
+          if-no-files-found: ignore
