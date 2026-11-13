@@ -20,7 +20,7 @@ env:
 jobs:
   phpspec:
     name: phpspec (unit specs)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
     steps:
       - uses: actions/checkout@v5
 
@@ -30,14 +30,14 @@ jobs:
           extensions: ${{ env.PHP_EXTENSIONS }}
           coverage: none
 
-      - uses: ramsey/composer-install@v3
+      - uses: ramsey/composer-install@v4
 
       - name: Run phpspec
         run: vendor/bin/phpspec run --no-interaction --format=dot
 
   phpunit:
     name: PHPUnit (functional tests)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-26.04
 
     services:
       db:
@@ -67,7 +67,7 @@ jobs:
           extensions: ${{ env.PHP_EXTENSIONS }}
           coverage: none
 
-      - uses: ramsey/composer-install@v3
+      - uses: ramsey/composer-install@v4
 
       - name: Create the test database schema
         run: |
@@ -79,7 +79,7 @@ jobs:
 
       - name: Upload test log on failure
         if: failure()
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: test-log
           path: var/log/test.log
