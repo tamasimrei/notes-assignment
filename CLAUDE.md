@@ -40,7 +40,18 @@ vendor/bin/phpspec run spec/Service/NoteServiceSpec.php
 - Controller tests check error responses through the real error handling (exception → `JsonApiProblemNormalizer` → JSON) with `assertJsonErrorResponse()`. Don't use `catchExceptions(false)` for that, because it skips the normalizer.
 - Some controller tests depend on earlier ones (`testCreateNote` returns data that later tests use), so running one of those alone with `--filter` may not work.
 
-The frontend has no tests yet.
+The frontend tests run in the `node` container with Vitest (jsdom, Testing Library):
+
+```sh
+docker compose exec node npm test                            # all of notes-frontend/src/**/*.test.jsx, once
+docker compose exec node npx vitest run src/Notes -t "creates a note"
+docker compose run --rm --no-deps node npm test              # when the stack is not running
+```
+
+- The tests render the whole app with `renderApp()` (`src/test/renderApp.jsx`) and act through the DOM. The API is mocked at the network level with MSW: `mockApi()` in `src/test/server.js` is an in-memory `/api/note` and `/api/tag` that records requests. Don't mock axios, `httpClient.js` or components; override an endpoint with `server.use(...)` to simulate an error.
+- A request without a handler fails the test (`src/test/setup.js`). When the API contract changes, update `src/test/server.js` and the test fixtures with it.
+- `vitest.config.js` is separate from `vite.config.js` (which has `public/` as root). It makes the page and the mocked API share the origin `http://localhost:3000`, because jsdom enforces CORS on XMLHttpRequest.
+- The alert timing tests (`src/Alert/Alert.test.jsx`) use fake timers; the other tests use real timers.
 
 ## Backend architecture
 
