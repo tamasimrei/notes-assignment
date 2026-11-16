@@ -1,6 +1,6 @@
 # Notes frontend
 
-React 18 app (react-bootstrap, axios), built with [Vite](https://vite.dev/).
+React 19 app (react-bootstrap, axios), built with [Vite](https://vite.dev/).
 
 It runs in the `node` service of the root `docker-compose.yml`, which runs `npm install && npm start` on startup.
 Run npm commands inside that container, because `node_modules` holds Linux-specific native binaries:
