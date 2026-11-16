@@ -13,6 +13,10 @@ RUN apk upgrade --no-cache \
 # Install composer from the official image
 COPY --from=composer /usr/bin/composer /usr/bin/composer
 
+# "nobody" has no writable home (HOME=/), so give composer its own
+ENV COMPOSER_HOME=/var/cache/composer
+RUN mkdir -p "$COMPOSER_HOME" && chown nobody:nobody "$COMPOSER_HOME"
+
 # Copy default nginx config file to set file root
 COPY docker/nginx-default.conf /etc/nginx/conf.d/default.conf
 
