@@ -4,3 +4,6 @@ doctrine_migrations:
         # as migrations classes should NOT be autoloaded
         'DoctrineMigrations': '%kernel.project_dir%/migrations'
     enable_profiler: false
+    # MariaDB commits implicitly on DDL, so a migration cannot run in one transaction.
+    # This makes newly generated migrations override isTransactional() to return false.
+    transactional: false

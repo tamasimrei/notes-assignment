@@ -63,4 +63,10 @@ final class Version20261111020123 extends AbstractMigration
         $this->addSql('DROP TABLE note_tag');
         $this->addSql('DROP TABLE tag');
     }
+
+    public function isTransactional(): bool
+    {
+        // MariaDB commits implicitly on DDL, so this cannot run in one transaction
+        return false;
+    }
 }

@@ -4,7 +4,7 @@ namespace spec\App\Entity;
 
 use App\Entity\Note;
 use App\Entity\Tag;
-use DateTime;
+use DateTimeImmutable;
 use PhpSpec\ObjectBehavior;
 
 class NoteSpec extends ObjectBehavior
@@ -37,7 +37,7 @@ class NoteSpec extends ObjectBehavior
 
     function it_has_a_creation_timestamp()
     {
-        $this->getCreatedAt()->shouldBeAnInstanceOf(DateTime::class);
+        $this->getCreatedAt()->shouldBeAnInstanceOf(DateTimeImmutable::class);
     }
 
     function it_can_have_tags(Tag $tag)

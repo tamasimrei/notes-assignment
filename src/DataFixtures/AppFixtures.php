@@ -4,7 +4,7 @@ namespace App\DataFixtures;
 
 use App\Entity\Note;
 use App\Entity\Tag;
-use DateTime;
+use DateTimeImmutable;
 use Doctrine\Bundle\FixturesBundle\Fixture;
 use Doctrine\Persistence\ObjectManager;
 use Doctrine\Persistence\ObjectRepository;
@@ -73,7 +73,7 @@ class AppFixtures extends Fixture
         $note
             ->setTitle($data[0])
             ->setDescription(($data[1]))
-            ->setCreatedAt(new DateTime($data[2]))
+            ->setCreatedAt(new DateTimeImmutable($data[2]))
         ;
 
         $this->addTagsToNote($note, $data[3]);
