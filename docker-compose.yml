@@ -12,11 +12,13 @@ services:
         condition: service_healthy
 
   db:
-    image: "mariadb"
+    build:
+      context: "./docker"
+      dockerfile: "mariadb.Dockerfile"
+    image: "notes-db:latest"
     restart: "always"
     environment:
       MARIADB_DATABASE: "tm-notes"
-      MARIADB_USER: "root"
       MARIADB_ROOT_PASSWORD: "Pas_W0rd"
     ports:
       - "3306:3306"

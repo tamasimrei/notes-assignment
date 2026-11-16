@@ -41,7 +41,7 @@ jobs:
 
     services:
       db:
-        image: mariadb:11.4
+        image: mariadb:11.8
         env:
           MARIADB_DATABASE: tm-notes
           MARIADB_ROOT_PASSWORD: Pas_W0rd
@@ -56,7 +56,7 @@ jobs:
     env:
       # Same as .env, but the service container is reached on localhost.
       # In the test environment Doctrine appends "_test" to the database name.
-      DATABASE_URL: "mysql://root:Pas_W0rd@127.0.0.1:3306/tm-notes?serverVersion=11.4.0-MariaDB"
+      DATABASE_URL: "mysql://root:Pas_W0rd@127.0.0.1:3306/tm-notes?serverVersion=11.8.9-MariaDB"
 
     steps:
       - uses: actions/checkout@v5
