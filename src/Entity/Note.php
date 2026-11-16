@@ -30,7 +30,7 @@ class Note
     /**
      * @var Collection<int, Tag>
      */
-    #[ORM\ManyToMany(targetEntity: Tag::class, cascade: ['persist', 'merge', 'refresh'])]
+    #[ORM\ManyToMany(targetEntity: Tag::class, cascade: ['persist', 'refresh'])]
     #[ORM\JoinTable(name: 'note_tag')]
     #[ORM\JoinColumn(name: 'note_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
     #[ORM\InverseJoinColumn(name: 'tag_id', referencedColumnName: 'id', onDelete: 'CASCADE')]
